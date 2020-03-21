@@ -7,6 +7,7 @@
 
     <ItemGroup>
       <Compile Remove="Directions.cs" />
+      <Compile Remove="Core\Game\GameBoard.cs" />
     </ItemGroup>
 
 </Project>

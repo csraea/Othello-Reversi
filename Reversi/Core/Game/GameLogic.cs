@@ -11,9 +11,11 @@ namespace Reversi {
         Player humanPlayer;
         private Player secondPlayer;
         private int state;
+        private UI ui;
 
-        public GameLogic(byte boardSize, byte gameMode) {
+        public GameLogic(byte boardSize, byte gameMode, UI ui) {
             this.boardSize = boardSize;
+            this.ui = ui;
             gameBoard = new Cell[boardSize, boardSize];
             _gameMode = gameMode;
             winnable = true;
@@ -58,7 +60,7 @@ namespace Reversi {
             bool exit = false;
             while (IsGameWinnable() || state  > 0) {
                 DetermineUsableCells(CellTypes.Player1, CellTypes.Player2);
-                DisplayGame();
+                ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
 
                 int[] coords;
                 do {
@@ -70,7 +72,7 @@ namespace Reversi {
                 
                 if (_gameMode == 2) {
                     DetermineUsableCells(CellTypes.Player2, CellTypes.Player1);
-                    DisplayGame();
+                    ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
                     
                     do {
                         coords = secondPlayer.MakeTurn();
@@ -237,63 +239,6 @@ namespace Reversi {
             return true;
         }
 
-        private char ParseOutput(int cellType) {
-            switch (cellType) {
-                case 0 :
-                    return ' ';
-                case 1 : 
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    return '+';
-                case 2 : 
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    return 'O';
-                case 3 : 
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    return 'X';
-            }
-
-            return ' ';
-        }
-        private void DisplayGame() {
-            Console.ResetColor();
-            Console.WriteLine("Current state of the game: " +
-                              humanPlayer.GetScore(gameBoard, CellTypes.Player1, boardSize) + ":" +
-                              secondPlayer.GetScore(gameBoard, CellTypes.Player2, boardSize));
-
-            for (int i = 0; i < BoardSize; i++) {
-                if (i == 0) Console.Write("   ");
-                Console.Write(" " + i);
-            }
-
-            Console.Write("\n");
-
-            for (int i = 0; i < BoardSize * 2 + 3; i++) {
-                if (i == 0) Console.Write("  ");
-                if (i == 0 || i == boardSize * 2 + 2) Console.Write("+");
-                else Console.Write("-");
-            }
-
-            Console.Write("\n");
-
-            for (ushort i = 0; i < boardSize; i++) {
-                Console.Write(i + " |");
-                for (ushort j = 0; j < boardSize; j++) {
-                    Console.Write(" " + ParseOutput((int) gameBoard[i, j].Type));
-                    Console.ResetColor();
-                }
-
-                Console.ResetColor();
-                Console.Write(" |\n");
-            }
-
-            for (int i = 0; i < BoardSize * 2 + 3; i++) {
-                if (i == 0) Console.Write("  ");
-                if (i == 0 || i == boardSize * 2 + 2) Console.Write("+");
-                else Console.Write("-");
-            }
-
-            Console.Write("\n");
-        }
 
         private byte BoardSize => boardSize;
     }

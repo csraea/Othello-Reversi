@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 namespace Reversi {
     public class ConsoleUI : UI{
@@ -166,5 +167,15 @@ namespace Reversi {
             Console.Write("\n");
         }
 
+        public void Exit() {
+            foreach (var VARIABLE in "Exiting...") {
+                Console.Write(VARIABLE);
+                Thread.Sleep(210);
+            }
+
+            Console.WriteLine("\nLoser.");
+            Thread.Sleep(200);
+            Console.Clear();
+        }
     }
 }

@@ -40,20 +40,27 @@ namespace Reversi {
             gameBoard[boardSize / 2, boardSize / 2].Type = CellTypes.Player1;
             gameBoard[boardSize / 2 - 1, boardSize / 2 -1].Type = CellTypes.Player1;
             
-            // gameBoard[boardSize - 2, boardSize - 2].Type = CellTypes.Player1;
-            // gameBoard[boardSize - 3, boardSize - 3].Type = CellTypes.Player2; 
+            // gameBoard[5, 2].Type = CellTypes.Player2;
+            // gameBoard[6, 2].Type = CellTypes.Player2;
+            // gameBoard[7,2].Type = CellTypes.Player2;
+            // gameBoard[8,2].Type = CellTypes.Player2;
+            // gameBoard[9,2].Type = CellTypes.Player2;
             //
-            // gameBoard[1, boardSize - 2].Type = CellTypes.Player1;
-            // gameBoard[2, boardSize - 3].Type = CellTypes.Player2;
+            // gameBoard[6,3].Type = CellTypes.Player2;
+            // gameBoard[8,3].Type = CellTypes.Player2;
+            //     
+            // gameBoard[6,4].Type = CellTypes.Player1;
+            // gameBoard[7,4].Type = CellTypes.Player2;
+            // gameBoard[8,4].Type = CellTypes.Player1;
             //
-            // gameBoard[1, 1].Type = CellTypes.Player1;
-            // gameBoard[2, 2].Type = CellTypes.Player2;
-
-            // gameBoard[boardSize - 2, 1].Type = CellTypes.Player1;
-            // gameBoard[boardSize - 3, 2].Type = CellTypes.Player1;
+            // gameBoard[5,5].Type = CellTypes.Player1;
+            // gameBoard[6,5].Type = CellTypes.Player1;
+            // gameBoard[7,5].Type = CellTypes.Player1;
             //
-            // gameBoard[boardSize - 3, 1].Type = CellTypes.Player2;
-            // gameBoard[boardSize - 3, 3].Type = CellTypes.Player1;
+            // gameBoard[4,6].Type = CellTypes.Player1;
+            // gameBoard[5,6].Type = CellTypes.Player1;
+            // gameBoard[6,6].Type = CellTypes.Player1;
+            // gameBoard[6,7].Type = CellTypes.Player2;
         }
 
         public sbyte StartGame() {
@@ -88,10 +95,7 @@ namespace Reversi {
 
         private bool CheckAndPlace(int[] coords, CellTypes type, ref bool exit) {
             if (coords[0] == -1) {
-                foreach (var VARIABLE in "Exiting...") {
-                    Console.Write(VARIABLE);
-                    Thread.Sleep(200);
-                }
+                ui.Exit();
                 exit = true;
                 return false;
             }
@@ -115,7 +119,7 @@ namespace Reversi {
         
         private void InspectCellByLine(Cell currentCell, CellTypes type, int depth, int recursionFlag) {
             int x = 0, y = 0, limit1 = 0, limit2 = 0; // values used in recursion
-            
+
             int initialX = 0, initialY = 0; //save the initial cell coords for which all the directions are being tested
             if (recursionFlag == 1) {
                 initialX = currentCell.X;
@@ -204,22 +208,30 @@ namespace Reversi {
         private void FindNeighbouring(CellTypes type1, CellTypes type2) {
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
-                    if(i != 0 && gameBoard[i-1, j].Type == type1 && gameBoard[i, j].Type == type2)
-                        gameBoard[i-1, j].Type = CellTypes.Neighbouring;
-                    else if(i != boardSize -1 && gameBoard[i+1,j].Type == type1 && gameBoard[i,j].Type == type2) 
-                        gameBoard[i+1, j].Type = CellTypes.Neighbouring;
-                    else if(j != 0 && gameBoard[i,j-1].Type == type1 && gameBoard[i,j].Type == type2)
-                        gameBoard[i, j-1].Type = CellTypes.Neighbouring;
-                    else if(j != boardSize -1 && gameBoard[i,j+1].Type == type1 && gameBoard[i,j].Type == type2)
-                        gameBoard[i, j+1].Type = CellTypes.Neighbouring; 
-                    else if(i != 0 && j != 0 && gameBoard[i-1, j-1].Type == type1 && gameBoard[i,j].Type == type2)
-                        gameBoard[i-1, j-1].Type = CellTypes.Neighbouring;
-                    else if(i != boardSize -1 && j != boardSize -1 && gameBoard[i+1,j+1].Type == type1 && gameBoard[i,j].Type == type2)
-                        gameBoard[i+1, j+1].Type = CellTypes.Neighbouring;
-                    else if(i != 0 && j != boardSize -1 && gameBoard[i-1,j+1].Type == type1 && gameBoard[i,j].Type == type2)
-                        gameBoard[i-1, j+1].Type = CellTypes.Neighbouring;
-                    else if(j != 0 && i != boardSize -1 && gameBoard[i+1,j-1].Type == type1 && gameBoard[i,j].Type == type2)
-                        gameBoard[i+1, j-1].Type = CellTypes.Neighbouring;
+                    if (i != 0 && gameBoard[i - 1, j].Type == type1 && gameBoard[i, j].Type == type2) {
+                        gameBoard[i - 1, j].Type = CellTypes.Neighbouring;
+                    }
+                    if (i != boardSize - 1 && gameBoard[i + 1, j].Type == type1 && gameBoard[i, j].Type == type2) {
+                        gameBoard[i + 1, j].Type = CellTypes.Neighbouring;
+                    }
+                    if (j != 0 && gameBoard[i, j - 1].Type == type1 && gameBoard[i, j].Type == type2) {
+                        gameBoard[i, j - 1].Type = CellTypes.Neighbouring;
+                    }
+                    if (j != boardSize - 1 && gameBoard[i, j + 1].Type == type1 && gameBoard[i, j].Type == type2) {
+                        gameBoard[i, j + 1].Type = CellTypes.Neighbouring;
+                    }
+                    if (i != 0 && j != 0 && gameBoard[i - 1, j - 1].Type == type1 && gameBoard[i, j].Type == type2) {
+                        gameBoard[i - 1, j - 1].Type = CellTypes.Neighbouring;
+                    }
+                    if (i != boardSize - 1 && j != boardSize - 1 && gameBoard[i + 1, j + 1].Type == type1 && gameBoard[i, j].Type == type2) {
+                        gameBoard[i + 1, j + 1].Type = CellTypes.Neighbouring;
+                    }
+                    if (i != 0 && j != boardSize - 1 && gameBoard[i - 1, j + 1].Type == type1 && gameBoard[i, j].Type == type2) {
+                        gameBoard[i - 1, j + 1].Type = CellTypes.Neighbouring;
+                    }
+                    if (j != 0 && i != boardSize - 1 && gameBoard[i + 1, j - 1].Type == type1 && gameBoard[i, j].Type == type2) {
+                        gameBoard[i + 1, j - 1].Type = CellTypes.Neighbouring;
+                    }
                 }
             }
         }

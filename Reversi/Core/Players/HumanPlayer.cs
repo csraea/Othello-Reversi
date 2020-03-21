@@ -14,9 +14,6 @@ namespace Reversi {
             Console.Read();
             char posX = Convert.ToChar(Console.Read());
 
-            Console.WriteLine("Y - " + (int)posY);
-            Console.WriteLine("X - " + (int)posX);
-            
             if (Char.IsLetter(posX) && Char.IsLetter(posY)) {
                 posX = (char) (Char.ToUpper(posX) - 'A');
                 posY = (char) (Char.ToUpper(posY) - 'A');

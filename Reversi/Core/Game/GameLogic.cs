@@ -1,6 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using NPuzzle.Service;
+using Reversi.Core.Players;
+using Reversi.Core.Players.AIBehaviours;
+using Service;
 
 namespace Reversi {
     public class GameLogic {
@@ -9,9 +13,12 @@ namespace Reversi {
         private readonly byte _gameMode;
         private bool winnable;
         Player humanPlayer;
-        private Player secondPlayer;
+        Player secondPlayer;
         private int state;
         private UI ui;
+        
+        private readonly IScoreService scoreService = new ScoreServiceFile();
+        
 
         public GameLogic(byte boardSize, byte gameMode, UI ui) {
             this.boardSize = boardSize;
@@ -20,10 +27,17 @@ namespace Reversi {
             _gameMode = gameMode;
             winnable = true;
             humanPlayer = new HumanPlayer();
-            secondPlayer = (gameMode == 1) ? (Player) new AIPlayer() : new HumanPlayer();
+            secondPlayer = (gameMode == 1) ? (Player) new AIPlayer(Behaviour.Mode.Easy, this) : new HumanPlayer();
             state = 2;
             FillBoard(CellTypes.Free);
             LocatePlayers();
+        }
+        
+        private void LocatePlayers() {
+            gameBoard[boardSize / 2, boardSize / 2 - 1].Type = CellTypes.Player2;
+            gameBoard[boardSize / 2 - 1, boardSize / 2].Type = CellTypes.Player2;
+            gameBoard[boardSize / 2, boardSize / 2].Type = CellTypes.Player1;
+            gameBoard[boardSize / 2 - 1, boardSize / 2 -1].Type = CellTypes.Player1;
         }
 
         private void FillBoard(CellTypes cellType) {
@@ -34,35 +48,6 @@ namespace Reversi {
             }
         }
 
-        private void LocatePlayers() {
-            gameBoard[boardSize / 2, boardSize / 2 - 1].Type = CellTypes.Player2;
-            gameBoard[boardSize / 2 - 1, boardSize / 2].Type = CellTypes.Player2;
-            gameBoard[boardSize / 2, boardSize / 2].Type = CellTypes.Player1;
-            gameBoard[boardSize / 2 - 1, boardSize / 2 -1].Type = CellTypes.Player1;
-            
-            // gameBoard[5, 2].Type = CellTypes.Player2;
-            // gameBoard[6, 2].Type = CellTypes.Player2;
-            // gameBoard[7,2].Type = CellTypes.Player2;
-            // gameBoard[8,2].Type = CellTypes.Player2;
-            // gameBoard[9,2].Type = CellTypes.Player2;
-            //
-            // gameBoard[6,3].Type = CellTypes.Player2;
-            // gameBoard[8,3].Type = CellTypes.Player2;
-            //     
-            // gameBoard[6,4].Type = CellTypes.Player1;
-            // gameBoard[7,4].Type = CellTypes.Player2;
-            // gameBoard[8,4].Type = CellTypes.Player1;
-            //
-            // gameBoard[5,5].Type = CellTypes.Player1;
-            // gameBoard[6,5].Type = CellTypes.Player1;
-            // gameBoard[7,5].Type = CellTypes.Player1;
-            //
-            // gameBoard[4,6].Type = CellTypes.Player1;
-            // gameBoard[5,6].Type = CellTypes.Player1;
-            // gameBoard[6,6].Type = CellTypes.Player1;
-            // gameBoard[6,7].Type = CellTypes.Player2;
-        }
-
         public sbyte StartGame() {
             bool exit = false;
             while (IsGameWinnable() || state  > 0) {
@@ -70,10 +55,12 @@ namespace Reversi {
                 ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
 
                 int[] coords;
+                
                 do {
-                    coords = humanPlayer.MakeTurn();
+                    coords = humanPlayer.MakeTurn(gameBoard);
                 } while (!CheckAndPlace(coords, CellTypes.Selected, ref exit) && !exit);
                 if (exit) break;
+                
                 ChangeCellType(CellTypes.Usable, CellTypes.Free);
                 Magic(CellTypes.Player2, CellTypes.Player1);
                 
@@ -82,13 +69,19 @@ namespace Reversi {
                     ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
                     
                     do {
-                        coords = secondPlayer.MakeTurn();
+                        coords = secondPlayer.MakeTurn(gameBoard);
                     } while (!CheckAndPlace(coords, CellTypes.Selected, ref exit) && !exit);
+                    
                     if(exit) break;
                     ChangeCellType(CellTypes.Usable, CellTypes.Free);
                     Magic(CellTypes.Player1, CellTypes.Player2);
                 }
+                else {
+                    
+                }
             }
+            
+            // scoreService.AddScore(new Score{Player = Environment.UserName, Points = field.GetScore()});
             
             return 0;
         }
@@ -102,10 +95,11 @@ namespace Reversi {
 
             if (gameBoard[coords[0], coords[1]].Type != CellTypes.Usable) return false;
             gameBoard[coords[0], coords[1]].Type = type;
+            
             return true;
         }
 
-        private void DetermineUsableCells(CellTypes target, CellTypes with) {
+        public void DetermineUsableCells(CellTypes target, CellTypes with) {
             FindNeighbouring(target, with);
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
@@ -117,7 +111,7 @@ namespace Reversi {
             ChangeCellType(CellTypes.Neighbouring, target);
         }
         
-        private void InspectCellByLine(Cell currentCell, CellTypes type, int depth, int recursionFlag) {
+        public void InspectCellByLine(Cell currentCell, CellTypes type, int depth, int recursionFlag) {
             int x = 0, y = 0, limit1 = 0, limit2 = 0; // values used in recursion
 
             int initialX = 0, initialY = 0; //save the initial cell coords for which all the directions are being tested
@@ -154,8 +148,7 @@ namespace Reversi {
                 default: return;
             }
         }
-
-
+        
         private void Magic(CellTypes type, CellTypes playerCell) {
             int substitution = 0;
             for (int i = 0; i < boardSize; i++) {
@@ -170,16 +163,15 @@ namespace Reversi {
         }
         
         private void CompleteLine(Cell currentCell, CellTypes type, CellTypes playerCell, int depth, int recursionFlag, ref int substitution) {
-            //Console.WriteLine(currentCell.Y + " " + currentCell.X);
-            int x = 0, y = 0, limit1 = 0, limit2 = 0; // values used in recursion
+            int x = 0, y = 0, limit1 = 0, limit2 = 0; // values used in recursion 
             
-            int initialX = 0, initialY = 0; //save the initial cell coords for which all the directions are being tested
+            int initialX = 0, initialY = 0; // save the initial cell coords for which all the directions are being tested
             if (recursionFlag == 1) {
                 initialX = currentCell.X;
                 initialY = currentCell.Y;
             }
             
-            ParseDirection(ref x, ref y, ref limit1, ref limit2, depth); //update variables
+            ParseDirection(ref x, ref y, ref limit1, ref limit2, depth); // update variables with the direction based on depth
             
             //exact recursion
             if (currentCell.X != limit1 && currentCell.Y != limit2 && gameBoard[currentCell.Y + y, currentCell.X + x].Type == type) {

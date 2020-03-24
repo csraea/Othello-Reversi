@@ -1,10 +1,73 @@
-namespace Reversi {
+using System;
+using Reversi.Core.Players.AIBehaviours;
+
+namespace Reversi.Core.Players {
     public class AIPlayer : Player {
-        public int[] MakeTurn() {
-            throw new System.NotImplementedException();
+        private Behaviour ai;
+        
+        public AIPlayer(Behaviour.Mode mode, GameLogic gameLogic) {
+            ai = CreateAI(mode, gameLogic);
+        }
+
+        public bool MakeTurn(ref Cell[,] gameBoard) {
+            ai.Sorcery(ref gameBoard);
+            return true;
+        }
+
+        private Behaviour CreateAI(Behaviour.Mode mode, GameLogic gameLogic) {
+            switch (mode) {
+                case Behaviour.Mode.Easy:
+                    return new AIEasy(gameLogic);
+                case Behaviour.Mode.Medium:
+                    return new AIMedium();
+                case Behaviour.Mode.Difficult:
+                    return new AIDifficult();
+            }
+            
+            return CreateAI((Behaviour.Mode) new Random().Next(2), gameLogic);
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //         
 //                 public static int Evaluation(byte[,] board)
 //         {

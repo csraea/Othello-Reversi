@@ -8,6 +8,22 @@
     <ItemGroup>
       <Compile Remove="Directions.cs" />
       <Compile Remove="Core\Game\GameBoard.cs" />
+      <Compile Remove="Core\Entity\**" />
+      <Compile Remove="Test\**" />
+      <Compile Remove="Core\Players\AI\**" />
+      <Compile Remove="Core\Players\AIMode.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Core\Entity\**" />
+      <EmbeddedResource Remove="Test\**" />
+      <EmbeddedResource Remove="Core\Players\AI\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Core\Entity\**" />
+      <None Remove="Test\**" />
+      <None Remove="Core\Players\AI\**" />
     </ItemGroup>
 
 </Project>

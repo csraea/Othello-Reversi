@@ -1,6 +1,6 @@
 namespace Reversi {
     public interface Player {
-        int[] MakeTurn();
+        bool MakeTurn(ref Cell[,] gameBoard);
         
         public int GetScore(Cell[,] gameBoard, CellTypes cellType, byte boardSize) {
             int tempScore = 0;

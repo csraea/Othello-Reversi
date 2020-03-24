@@ -26,8 +26,8 @@ namespace Reversi {
             gameBoard = new Cell[boardSize, boardSize];
             _gameMode = gameMode;
             winnable = true;
-            humanPlayer = new HumanPlayer();
-            secondPlayer = (gameMode == 1) ? (Player) new AIPlayer(Behaviour.Mode.Easy, this) : new HumanPlayer();
+            humanPlayer = new HumanPlayer(this);
+            secondPlayer = (gameMode == 1) ? (Player) new AIPlayer(Behaviour.Mode.Easy, this) : new HumanPlayer(this);
             state = 2;
             FillBoard(CellTypes.Free);
             LocatePlayers();
@@ -49,54 +49,26 @@ namespace Reversi {
         }
 
         public sbyte StartGame() {
-            bool exit = false;
-            while (IsGameWinnable() || state  > 0) {
-                DetermineUsableCells(CellTypes.Player1, CellTypes.Player2);
+            Player player = secondPlayer;
+            do {
+                player = (player == humanPlayer) ? secondPlayer : humanPlayer;
+
+                if(player == humanPlayer) DetermineUsableCells(CellTypes.Player1, CellTypes.Player2);
+                else DetermineUsableCells(CellTypes.Player2, CellTypes.Player1);
+                
                 ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
 
-                int[] coords;
-                
-                do {
-                    coords = humanPlayer.MakeTurn(gameBoard);
-                } while (!CheckAndPlace(coords, CellTypes.Selected, ref exit) && !exit);
-                if (exit) break;
-                
+                if (!player.MakeTurn(ref gameBoard)) {
+                        ui.Exit();
+                }
+
                 ChangeCellType(CellTypes.Usable, CellTypes.Free);
-                Magic(CellTypes.Player2, CellTypes.Player1);
+                if(player == humanPlayer) Magic(CellTypes.Player2, CellTypes.Player1); 
+                else Magic(CellTypes.Player1, CellTypes.Player2);
                 
-                if (_gameMode == 2) {
-                    DetermineUsableCells(CellTypes.Player2, CellTypes.Player1);
-                    ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
-                    
-                    do {
-                        coords = secondPlayer.MakeTurn(gameBoard);
-                    } while (!CheckAndPlace(coords, CellTypes.Selected, ref exit) && !exit);
-                    
-                    if(exit) break;
-                    ChangeCellType(CellTypes.Usable, CellTypes.Free);
-                    Magic(CellTypes.Player1, CellTypes.Player2);
-                }
-                else {
-                    
-                }
-            }
-            
-            // scoreService.AddScore(new Score{Player = Environment.UserName, Points = field.GetScore()});
+            } while (IsGameWinnable());
             
             return 0;
-        }
-
-        private bool CheckAndPlace(int[] coords, CellTypes type, ref bool exit) {
-            if (coords[0] == -1) {
-                ui.Exit();
-                exit = true;
-                return false;
-            }
-
-            if (gameBoard[coords[0], coords[1]].Type != CellTypes.Usable) return false;
-            gameBoard[coords[0], coords[1]].Type = type;
-            
-            return true;
         }
 
         public void DetermineUsableCells(CellTypes target, CellTypes with) {

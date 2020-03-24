@@ -16,6 +16,7 @@ namespace Reversi.Core.Players.AIBehaviours {
             GetPossibleMoves(gameBoard, ref _possibleMoves);
             Cell selected = GetRandomCell();
             gameBoard[selected.Y, selected.X].Type = CellTypes.Selected;
+            _possibleMoves.Clear();
         }
 
         private Cell GetRandomCell() {

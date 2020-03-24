@@ -1,6 +1,11 @@
+using System;
+
 namespace Reversi {
-    public interface Player {
-        bool MakeTurn(ref Cell[,] gameBoard);
+    public abstract class Player {
+        protected Player() {
+        }
+
+        public abstract bool MakeTurn(ref Cell[,] gameBoard);
         
         public int GetScore(Cell[,] gameBoard, CellTypes cellType, byte boardSize) {
             int tempScore = 0;
@@ -14,5 +19,13 @@ namespace Reversi {
 
             return tempScore;
         }
+        
+        public bool CheckAndPlace(int Y, int X, CellTypes type, ref Cell[,] gameBoard) {
+            if (gameBoard[Y, X].Type != CellTypes.Usable) return false;
+            gameBoard[Y, X].Type = type;
+            
+            return true;
+        }
+        
     }
 }

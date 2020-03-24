@@ -107,6 +107,10 @@ namespace Reversi {
             Console.WriteLine("--------------------------------");
         }
 
+        public void Think() {
+            
+        }
+
         private char ParseOutput(int cellType) {
             switch (cellType) {
                 case 0 :

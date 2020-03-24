@@ -8,7 +8,7 @@ namespace Reversi {
             _gameLogic = gameLogic;
         }
 
-        public bool MakeTurn(ref Cell[,] gameBoard) {
+        public override bool MakeTurn(ref Cell[,] gameBoard) {
 
             Console.Write("Please, enter the coordinates: ");
             char posY = Convert.ToChar(Console.Read());
@@ -28,13 +28,13 @@ namespace Reversi {
 
             if(Char.IsDigit((char)(posX+48)) && Char.IsDigit((char)(posY+48))) {
                 Console.ReadLine();
-                _gameLogic.
-                return coord;
+                
+                if(!CheckAndPlace(posY, posX, CellTypes.Selected, ref gameBoard)) {
+                    return MakeTurn(ref gameBoard);
+                }
             }
-
-            Program.ClearBuffer();
-
-            return MakeTurn(gameBoard);
+            
+            return true;
         }
 
     }

@@ -6,10 +6,11 @@ namespace Reversi.Core.Players {
         private Behaviour ai;
         
         public AIPlayer(Behaviour.Mode mode, GameLogic gameLogic) {
+            
             ai = CreateAI(mode, gameLogic);
         }
 
-        public bool MakeTurn(ref Cell[,] gameBoard) {
+        public override bool MakeTurn(ref Cell[,] gameBoard) {
             ai.Sorcery(ref gameBoard);
             return true;
         }

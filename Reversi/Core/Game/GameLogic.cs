@@ -55,14 +55,15 @@ namespace Reversi {
 
                 if(player == humanPlayer) DetermineUsableCells(CellTypes.Player1, CellTypes.Player2);
                 else DetermineUsableCells(CellTypes.Player2, CellTypes.Player1);
-                
+
                 ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
 
                 if (!player.MakeTurn(ref gameBoard)) {
                         ui.Exit();
                 }
-
+                
                 ChangeCellType(CellTypes.Usable, CellTypes.Free);
+                
                 if(player == humanPlayer) Magic(CellTypes.Player2, CellTypes.Player1); 
                 else Magic(CellTypes.Player1, CellTypes.Player2);
                 
@@ -153,8 +154,10 @@ namespace Reversi {
             } else if (currentCell.X != limit1 && currentCell.Y != limit2 && gameBoard[currentCell.Y + y, currentCell.X + x].Type == playerCell && currentCell.Type == type) {
                 gameBoard[currentCell.Y, currentCell.X].Type = playerCell;
                 substitution = 1;
+            } else if (currentCell.X != limit1 && currentCell.Y != limit2 && gameBoard[currentCell.Y + y, currentCell.X + x].Type == CellTypes.Free && currentCell.Type == type) {
+                substitution = 0;
             }
-            
+
             //change the direction
             while (recursionFlag == 1 && depth > 1) {
                 CompleteLine(gameBoard[initialY, initialX], type, playerCell, --depth, 0, ref substitution);

@@ -121,10 +121,10 @@ namespace Reversi {
                     return '+';
                 case 2 : 
                     Console.ForegroundColor = ConsoleColor.Blue;
-                    return 'O';
+                    return 'X';
                 case 3 : 
                     Console.ForegroundColor = ConsoleColor.Red;
-                    return 'X';
+                    return 'O';
             }
 
             return ' ';

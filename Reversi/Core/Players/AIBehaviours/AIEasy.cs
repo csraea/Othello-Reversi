@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Reversi.Core.Players.AIBehaviours {
     public class AIEasy : Behaviour {
@@ -20,7 +19,7 @@ namespace Reversi.Core.Players.AIBehaviours {
         }
 
         private Cell GetRandomCell() {
-            return _possibleMoves[new Random().Next(_possibleMoves.Capacity-1)];
+            return _possibleMoves[new Random().Next(_possibleMoves.Count-1)];   // Here the index is out of range
         }
     }
 }

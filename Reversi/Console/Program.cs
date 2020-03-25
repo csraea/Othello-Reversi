@@ -12,7 +12,7 @@ namespace Reversi {
             byte gamemode = ui.RenderWelcomeMenu();
             if(gamemode == 0) Environment.Exit(0); 
             
-            GameLogic gameLogic = new GameLogic((gamemode == 1) ? (byte) 8 : ui.GetBoardSize(), gamemode, ui);
+            GameLogic gameLogic = new GameLogic((gamemode == 1) ? (byte) 4 : ui.GetBoardSize(), gamemode, ui);
             gameLogic.StartGame();
 
             ClearBuffer();

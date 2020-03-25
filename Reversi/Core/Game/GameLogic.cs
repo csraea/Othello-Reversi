@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using NPuzzle.Entity;
 using NPuzzle.Service;
 using Reversi.Core.Players;
 using Reversi.Core.Players.AIBehaviours;
@@ -11,26 +13,25 @@ namespace Reversi {
         private byte boardSize;
         private Cell[,] gameBoard;
         private readonly byte _gameMode;
-        private bool winnable;
         Player humanPlayer;
         Player secondPlayer;
         private int state;
         private UI ui;
         
         private readonly IScoreService scoreService = new ScoreServiceFile();
-        
+        // private DateTime startTime = new DateTime.Now();
 
         public GameLogic(byte boardSize, byte gameMode, UI ui) {
             this.boardSize = boardSize;
             this.ui = ui;
             gameBoard = new Cell[boardSize, boardSize];
             _gameMode = gameMode;
-            winnable = true;
             humanPlayer = new HumanPlayer(this);
             secondPlayer = (gameMode == 1) ? (Player) new AIPlayer(Behaviour.Mode.Easy, this) : new HumanPlayer(this);
             state = 2;
             FillBoard(CellTypes.Free);
             LocatePlayers();
+
         }
         
         private void LocatePlayers() {
@@ -58,17 +59,24 @@ namespace Reversi {
 
                 ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
 
+                if(!IsGameWinnable()) break;
                 if (!player.MakeTurn(ref gameBoard)) {
                         ui.Exit();
+                        return 1;
                 }
+
                 
                 ChangeCellType(CellTypes.Usable, CellTypes.Free);
                 
                 if(player == humanPlayer) Magic(CellTypes.Player2, CellTypes.Player1); 
                 else Magic(CellTypes.Player1, CellTypes.Player2);
                 
-            } while (IsGameWinnable());
+            } while (true);
             
+            // scoreService.AddScore(new Score{Player = Environment.UserName, Points = field.GetScore()});
+
+            Console.ReadLine();
+            ui.Exit();
             return 0;
         }
 
@@ -154,7 +162,7 @@ namespace Reversi {
             } else if (currentCell.X != limit1 && currentCell.Y != limit2 && gameBoard[currentCell.Y + y, currentCell.X + x].Type == playerCell && currentCell.Type == type) {
                 gameBoard[currentCell.Y, currentCell.X].Type = playerCell;
                 substitution = 1;
-            } else if (currentCell.X != limit1 && currentCell.Y != limit2 && gameBoard[currentCell.Y + y, currentCell.X + x].Type == CellTypes.Free && currentCell.Type == type) {
+            } else if (currentCell.X != limit1 && currentCell.Y != limit2 && (gameBoard[currentCell.Y + y, currentCell.X + x].Type == CellTypes.Free || gameBoard[currentCell.Y + y, currentCell.X + x].Type == CellTypes.Usable) && currentCell.Type == type) {
                 substitution = 0;
             }
 
@@ -204,18 +212,13 @@ namespace Reversi {
         }
         
         private bool IsGameWinnable() {
-            if (!winnable) return false;
-            // int counter = 0;
-            // for (int i = 0; i < boardSize; i++) {
-            //     for (int j = 0; j < boardSize; j++) {
-            //         if (gameBoard[i, j].Type == CellTypes.Usable)
-            //             counter++;
-            //     }
-            // }
-            //
-            // if (counter == 0 && state != 2) state = 0;
-            // if (state == 2) state--;
-            return true;
+            for (int i = 0; i < boardSize; i++) {
+                for (int j = 0; j < boardSize; j++) {
+                    if (gameBoard[i, j].Type == CellTypes.Usable) return true;
+                }
+            }
+
+            return false;
         }
 
 
@@ -312,3 +315,9 @@ namespace Reversi {
         //     }
         //     
         // }
+        
+        
+// Behaviour.GetPossibleMoves(gameBoard, ref Behaviour.PossibleMoves);
+// bool winnable = Behaviour.PossibleMoves.Any();
+// Behaviour.PossibleMoves.Clear();
+// return winnable;

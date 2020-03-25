@@ -181,5 +181,14 @@ namespace Reversi {
             Thread.Sleep(200);
             Console.Clear();
         }
+        
+        // private void PrintScores() {
+        //     Console.WriteLine("Top scores:");
+        //     foreach (var score in scoreService.GetTopScores())
+        //     {
+        //         Console.WriteLine("{0} {1}", score.Player, score.Points);
+        //     }
+        // }
+
     }
 }

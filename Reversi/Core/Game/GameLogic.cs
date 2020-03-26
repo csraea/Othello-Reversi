@@ -8,13 +8,13 @@ using NPuzzle.Service;
 using Reversi.Core.Players;
 using Reversi.Core.Players.AIBehaviours;
 using Reversi.Core.Service.Comments;
+using Reversi.Core.Service.Rating;
 using Service;
 
 namespace Reversi {
     public class GameLogic {
         private byte boardSize;
         private Cell[,] gameBoard;
-        private readonly byte _gameMode;
         Player humanPlayer;
         Player secondPlayer;
         private int state;
@@ -22,13 +22,13 @@ namespace Reversi {
         
         private readonly ICommentService commentService = new CommentService();
         private readonly IScoreService scoreService = new ScoreServiceFile();
+        private readonly IRatingService ratingService = new RatingService();
 
 
         public GameLogic(byte boardSize, byte gameMode, UI ui) {
             this.boardSize = boardSize;
             this.ui = ui;
-            gameBoard = new Cell[boardSize, boardSize];
-            _gameMode = gameMode;
+            gameBoard = new Cell[boardSize, boardSize]; ;
             humanPlayer = new HumanPlayer(this, ui.GetName(), ConsoleColor.Blue);
             secondPlayer = (gameMode == 1) ? (Player) new AIPlayer(Behaviour.Mode.Easy, this, ConsoleColor.Red) : new HumanPlayer(this, ui.GetName(), ConsoleColor.Red);
             state = 2;
@@ -54,12 +54,15 @@ namespace Reversi {
             LocatePlayers();
             Player player = secondPlayer;
             bool firstTurn = true;
+            
             do {
                 player = (player == humanPlayer) ? secondPlayer : humanPlayer;
 
                 if(player == humanPlayer) DetermineUsableCells(CellTypes.Player1, CellTypes.Player2);
                 else DetermineUsableCells(CellTypes.Player2, CellTypes.Player1);
-                
+
+                // UI based on player's turn. (1,3 - optional)
+                if (firstTurn && !ratingService.GetLastRatings().Count.Equals(0)) ui.PrintRating(ratingService);
                 ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
                 if(!firstTurn && secondPlayer.Name.Equals("Handsome Jack") && player == secondPlayer) ui.Think();
                 
@@ -85,6 +88,8 @@ namespace Reversi {
             if(commentService.GetLastComments().Any()) ui.PrintComments(commentService);
             commentService.AddComment(new Comment{Player = secondPlayer.Name, Text = ui.GetComment(secondPlayer), Time = DateTime.Now});
             commentService.AddComment(new Comment{Player = humanPlayer.Name, Text = ui.GetComment(humanPlayer), Time = DateTime.Now});
+            
+            ratingService.Rate(new Rating{Mark = ui.GetMark(), Player = humanPlayer.Name});
             if (ui.Restart() > -1) return StartGame();
             else {
                 ui.Exit();
@@ -238,97 +243,6 @@ namespace Reversi {
     }
 }
 
-        // private void GetUsableCells(Cell currentCell, CellTypes type, int direction) {
-        //     if (direction == 8) {
-        //         if(currentCell.Y == 0) return;
-        //         if (currentCell.Y != 0 && gameBoard[currentCell.Y - 1, currentCell.X].Type == type) {
-        //             GetUsableCells(gameBoard[currentCell.Y - 1, currentCell.X], type, direction);
-        //         }
-        //         else if (gameBoard[currentCell.Y - 1, currentCell.X].Type == CellTypes.Free && currentCell.Type == type) {
-        //             gameBoard[currentCell.Y - 1, currentCell.X].Type = CellTypes.Usable;
-        //         }
-        //         else return;
-        //     }
-        //
-        //     if (direction == 7) {
-        //         if(currentCell.Y == boardSize - 1) return;
-        //         if (currentCell.Y != boardSize - 1 && gameBoard[currentCell.Y + 1, currentCell.X].Type == type) {
-        //             GetUsableCells(gameBoard[currentCell.Y + 1, currentCell.X], type, direction);
-        //         }
-        //         else if (gameBoard[currentCell.Y + 1, currentCell.X].Type == CellTypes.Free && currentCell.Type == type) {
-        //             gameBoard[currentCell.Y + 1, currentCell.X].Type = CellTypes.Usable;
-        //         }
-        //         else return;
-        //     }
-        //     
-        //     if (direction == 6) {
-        //         if(currentCell.X == 0) return;
-        //         if (currentCell.X != 0 && gameBoard[currentCell.Y, currentCell.X - 1].Type == type) {
-        //             GetUsableCells(gameBoard[currentCell.Y, currentCell.X - 1], type, direction);
-        //         }
-        //         else if (gameBoard[currentCell.Y, currentCell.X - 1].Type == CellTypes.Free && currentCell.Type == type) {
-        //             gameBoard[currentCell.Y, currentCell.X - 1].Type = CellTypes.Usable;
-        //         }
-        //         else return;
-        //     }
-        //     
-        //     if (direction == 5) {
-        //         if(currentCell.X == boardSize - 1) return;
-        //         if (currentCell.X != boardSize - 1 && gameBoard[currentCell.Y, currentCell.X + 1].Type == type) {
-        //             GetUsableCells(gameBoard[currentCell.Y, currentCell.X + 1], type, direction);
-        //         }
-        //         else if (gameBoard[currentCell.Y, currentCell.X + 1].Type == CellTypes.Free && currentCell.Type == type) {
-        //             gameBoard[currentCell.Y, currentCell.X + 1].Type = CellTypes.Usable;
-        //         }
-        //         else return;
-        //     }
-        //     
-        //     if (direction == 4) {
-        //         if(currentCell.X == 0 && currentCell.Y == 0) return;
-        //         if (currentCell.X != 0 && currentCell.Y != 0 && gameBoard[currentCell.Y - 1, currentCell.X - 1].Type == type) {
-        //             GetUsableCells(gameBoard[currentCell.Y - 1, currentCell.X - 1], type, direction);
-        //         }
-        //         else if (gameBoard[currentCell.Y - 1, currentCell.X - 1].Type == CellTypes.Free && currentCell.Type == type) {
-        //             gameBoard[currentCell.Y - 1, currentCell.X - 1].Type = CellTypes.Usable;
-        //         }
-        //         else return;
-        //     }
-        //     
-        //     if (direction == 3) {
-        //         if(currentCell.X == boardSize - 1 && currentCell.Y == boardSize - 1) return;
-        //         if (currentCell.X != boardSize - 1 && currentCell.Y != boardSize - 1 && gameBoard[currentCell.Y + 1, currentCell.X + 1].Type == type) {
-        //             GetUsableCells(gameBoard[currentCell.Y + 1, currentCell.X + 1], type, direction);
-        //         }
-        //         else if (gameBoard[currentCell.Y + 1, currentCell.X + 1].Type == CellTypes.Free && currentCell.Type == type) {
-        //             gameBoard[currentCell.Y + 1, currentCell.X + 1].Type = CellTypes.Usable;
-        //         }
-        //         else return;
-        //     }
-        //     
-        //     if (direction == 2) {
-        //         if(currentCell.Y == 0 && currentCell.X == boardSize - 1) return;
-        //         if (currentCell.Y != 0 && currentCell.X != boardSize - 1 && gameBoard[currentCell.Y - 1, currentCell.X + 1].Type == type) {
-        //             GetUsableCells(gameBoard[currentCell.Y - 1, currentCell.X + 1], type, direction);
-        //         }
-        //         else if (gameBoard[currentCell.Y - 1, currentCell.X + 1].Type == CellTypes.Free && currentCell.Type == type) {
-        //             gameBoard[currentCell.Y - 1, currentCell.X + 1].Type = CellTypes.Usable;
-        //         }
-        //         else return;
-        //     }
-        //     
-        //     if (direction == 4) {
-        //         if(currentCell.X == 0 && currentCell.Y == boardSize - 1) return;
-        //         if (currentCell.X != 0 && currentCell.Y != boardSize - 1 && gameBoard[currentCell.Y + 1, currentCell.X - 1].Type == type) {
-        //             GetUsableCells(gameBoard[currentCell.Y + 1, currentCell.X - 1], type, direction);
-        //         }
-        //         else if (gameBoard[currentCell.Y + 1, currentCell.X - 1].Type == CellTypes.Free && currentCell.Type == type) {
-        //             gameBoard[currentCell.Y + 1, currentCell.X - 1].Type = CellTypes.Usable;
-        //         }
-        //     }
-        //     
-        // }
-        
-        
 // Behaviour.GetPossibleMoves(gameBoard, ref Behaviour.PossibleMoves);
 // bool winnable = Behaviour.PossibleMoves.Any();
 // Behaviour.PossibleMoves.Clear();

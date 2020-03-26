@@ -4,6 +4,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using Reversi.Core.Players;
 using Reversi.Core.Service.Comments;
+using Reversi.Core.Service.Rating;
 using Service;
 
 namespace Reversi {
@@ -157,8 +158,8 @@ namespace Reversi {
         public void DisplayGame(Player humanPlayer, Player secondPlayer, Cell[,] gameBoard, byte boardSize) {
             Console.ForegroundColor = humanPlayer._color;
             Console.Write(humanPlayer.Name + " : " + humanPlayer.GetScore(gameBoard, CellTypes.Player1, boardSize));
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write(" ||| ");
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write(" | ");
             Console.ForegroundColor = secondPlayer._color;
             Console.Write(secondPlayer.Name + " : " + secondPlayer.GetScore(gameBoard, CellTypes.Player2, boardSize));
             Console.ResetColor();
@@ -240,10 +241,23 @@ namespace Reversi {
             }
             return player.Name.Equals("Handsome Jack")
                 ? "What a fantastic game! I adore it! I'M THE BEST PLAYER EVER!!!"
-                : Console.ReadLine();
+                : GetCommentContent();
+        }
+
+        private string GetCommentContent() {
+            string input = Console.ReadLine();
+            if (input.Length.Equals(0)) {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write("Comment cannot be empty: ");
+                Console.ResetColor();
+                return GetCommentContent();
+            }
+
+            return input;
         }
 
         public sbyte Restart() {
+            Console.ResetColor();
             Console.Write("Play again? [y/n]:  ");
             String answer = Console.ReadLine();
             foreach (var symbol in answer) {
@@ -251,6 +265,60 @@ namespace Reversi {
             }
 
             return -1;
+        }
+
+        public void PrintRating(IRatingService ratingService) {
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write("World game rating: ");
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(ratingService.GetAverageRating().ToString("#.00"));
+            Console.WriteLine();
+            Console.ResetColor();
+        }
+
+        public int GetMark() {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("Rate us: ");
+            return CheckMark();
+        }
+
+        private int CheckMark() {
+            int result = -1;
+            string input = Console.ReadLine();
+            bool success = true;
+            try {
+                result = Convert.ToInt32(input);
+            }
+            catch (FormatException) {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Invalid input!");
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.Write("Try again: ");
+                success = false;
+            }
+            catch (OverflowException) {
+                if (success) {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid input!");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.Write("Try again: ");
+                }
+
+                success = false;
+            }
+
+            if (result < 0 || result > 10) {
+                if (success) {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid input!");
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;;
+                    Console.Write("Try again: ");
+                }
+
+                success = false;
+            }
+            
+            return (!success) ? CheckMark() : result;
         }
     }
 }

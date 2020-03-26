@@ -14,7 +14,7 @@ namespace Reversi {
             Console.ForegroundColor = _color;
             Console.Write(Name);
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write( ", enter the coordinates: ");
+            Console.Write( ", enter the coordinates [y x]: ");
             Console.ForegroundColor = _color;
             
             char posY = Convert.ToChar(Console.Read());

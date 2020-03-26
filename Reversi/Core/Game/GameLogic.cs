@@ -7,6 +7,7 @@ using NPuzzle.Entity;
 using NPuzzle.Service;
 using Reversi.Core.Players;
 using Reversi.Core.Players.AIBehaviours;
+using Reversi.Core.Service.Comments;
 using Service;
 
 namespace Reversi {
@@ -19,8 +20,9 @@ namespace Reversi {
         private int state;
         private UI ui;
         
+        private readonly ICommentService commentService = new CommentService();
         private readonly IScoreService scoreService = new ScoreServiceFile();
-        // private DateTime startTime = new DateTime.Now();
+
 
         public GameLogic(byte boardSize, byte gameMode, UI ui) {
             this.boardSize = boardSize;
@@ -75,13 +77,18 @@ namespace Reversi {
                 firstTurn = false;
             } while (true);
             
-            scoreService.AddScore(new Score{Player = humanPlayer.Name, Points = humanPlayer.GetScore(gameBoard,CellTypes.Player1, boardSize)});
-            scoreService.AddScore(new Score{Player = secondPlayer.Name, Points = secondPlayer.GetScore(gameBoard,CellTypes.Player2, boardSize)});
+            scoreService.AddScore(new Score{Player = humanPlayer.Name, Points = humanPlayer.GetScore(gameBoard,CellTypes.Player1, boardSize), Time = DateTime.Now});
+            scoreService.AddScore(new Score{Player = secondPlayer.Name, Points = secondPlayer.GetScore(gameBoard,CellTypes.Player2, boardSize), Time = DateTime.Now});
             ui.PrintScores(scoreService);
             
             Console.ReadLine();
+            if(commentService.GetLastComments().Any()) ui.PrintComments(commentService);
+            commentService.AddComment(new Comment{Player = secondPlayer.Name, Text = ui.GetComment(secondPlayer), Time = DateTime.Now});
+            commentService.AddComment(new Comment{Player = humanPlayer.Name, Text = ui.GetComment(humanPlayer), Time = DateTime.Now});
             if (ui.Restart() > -1) return StartGame();
-            else ui.Exit();
+            else {
+                ui.Exit();
+            }
             return 0;
         }
 

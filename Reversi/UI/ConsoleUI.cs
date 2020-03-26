@@ -1,7 +1,9 @@
 using System;
+using System.Globalization;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using Reversi.Core.Players;
+using Reversi.Core.Service.Comments;
 using Service;
 
 namespace Reversi {
@@ -116,7 +118,7 @@ namespace Reversi {
                 "I'm thinking...",
                 "Good move!",
                 "Hah, Bustard!!",
-                "I'm afraid you are gonna lose.",
+                "I'm afraid you gonna lose.",
                 "FUCK YOUR FUCKIN' FUCK!",
                 "I feel sadness about that.",
                 "I'm confused. Haha! Joke."
@@ -126,7 +128,7 @@ namespace Reversi {
             Console.ForegroundColor = ConsoleColor.Red;
             foreach (var letter in phrases[new Random().Next(7)]) {
                 Console.Write(letter);
-                Thread.Sleep(90);
+                Thread.Sleep(50);
             }
             Console.WriteLine();
             
@@ -217,10 +219,28 @@ namespace Reversi {
         
         public void PrintScores(IScoreService scoreService) {
             Console.WriteLine("Top scores of the session:");
-            foreach (var score in scoreService.GetTopScores())
-            {
-                Console.WriteLine("{0} {1}", score.Player, score.Points);
+            foreach (var score in scoreService.GetTopScores()) {
+                if(score.Player.Equals("Handsome Jack")) Console.WriteLine("{0} : {1}\t{2}", score.Player, score.Points, score.Time.ToString("F"));
+                else Console.WriteLine("{0} : {1}\t\t{2}", score.Player, score.Points, score.Time.ToString("F"));
             }
+        }
+        
+        public void PrintComments(ICommentService commentService) {
+            Console.WriteLine("-------------------------");
+            Console.WriteLine("Recent comments:");
+            foreach (var comment in commentService.GetLastComments()) { 
+                Console.WriteLine("{0}: {1}\t({2})", comment.Player, comment.Text, comment.Time.ToString("G"));
+            }
+        }
+
+        public String GetComment(Player player) {
+            if (!player.Name.Equals("Handsome Jack")) {
+                Console.WriteLine("Leave your comment, hero!");
+                Console.Write(player.Name + ": ");
+            }
+            return player.Name.Equals("Handsome Jack")
+                ? "What a fantastic game! I adore it! I'M THE BEST PLAYER EVER!!!"
+                : Console.ReadLine();
         }
 
         public sbyte Restart() {

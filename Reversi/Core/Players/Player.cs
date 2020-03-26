@@ -2,7 +2,14 @@ using System;
 
 namespace Reversi {
     public abstract class Player {
+        public String Name { get; set; }
+        public ConsoleColor _color { get; set; }
+
+        protected Player(String name) {
+        }
+
         protected Player() {
+            
         }
 
         public abstract bool MakeTurn(ref Cell[,] gameBoard);

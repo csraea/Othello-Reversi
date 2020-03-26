@@ -26,4 +26,10 @@
       <None Remove="Core\Players\AI\**" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Core\Service\Comments" />
+      <Folder Include="Core\Service\Preservation" />
+      <Folder Include="Core\Service\Rating" />
+    </ItemGroup>
+
 </Project>

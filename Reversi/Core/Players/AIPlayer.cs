@@ -5,9 +5,10 @@ namespace Reversi.Core.Players {
     public class AIPlayer : Player {
         private Behaviour ai;
         
-        public AIPlayer(Behaviour.Mode mode, GameLogic gameLogic) {
-            
+        public AIPlayer(Behaviour.Mode mode, GameLogic gameLogic, ConsoleColor color) {
+            Name = "Handsome Jack";
             ai = CreateAI(mode, gameLogic);
+            _color = color;
         }
 
         public override bool MakeTurn(ref Cell[,] gameBoard) {

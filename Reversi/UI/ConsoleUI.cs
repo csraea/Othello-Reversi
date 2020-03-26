@@ -1,5 +1,8 @@
 using System;
+using System.Reflection.Metadata.Ecma335;
 using System.Threading;
+using Reversi.Core.Players;
+using Service;
 
 namespace Reversi {
     public class ConsoleUI : UI{
@@ -108,7 +111,26 @@ namespace Reversi {
         }
 
         public void Think() {
+            String[] phrases = new[] {
+                "Hmm...",
+                "I'm thinking...",
+                "Good move!",
+                "Hah, Bustard!!",
+                "I'm afraid you are gonna lose.",
+                "FUCK YOUR FUCKIN' FUCK!",
+                "I feel sadness about that.",
+                "I'm confused. Haha! Joke."
+            };
             
+            Console.Write("Jack's opinion: ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            foreach (var letter in phrases[new Random().Next(7)]) {
+                Console.Write(letter);
+                Thread.Sleep(90);
+            }
+            Console.WriteLine();
+            
+            Console.ResetColor();
         }
 
         private char ParseOutput(int cellType) {
@@ -131,11 +153,15 @@ namespace Reversi {
         }
 
         public void DisplayGame(Player humanPlayer, Player secondPlayer, Cell[,] gameBoard, byte boardSize) {
+            Console.ForegroundColor = humanPlayer._color;
+            Console.Write(humanPlayer.Name + " : " + humanPlayer.GetScore(gameBoard, CellTypes.Player1, boardSize));
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write(" ||| ");
+            Console.ForegroundColor = secondPlayer._color;
+            Console.Write(secondPlayer.Name + " : " + secondPlayer.GetScore(gameBoard, CellTypes.Player2, boardSize));
             Console.ResetColor();
-            Console.WriteLine("Current state of the game: " +
-                              humanPlayer.GetScore(gameBoard, CellTypes.Player1, boardSize) + ":" +
-                              secondPlayer.GetScore(gameBoard, CellTypes.Player2, boardSize));
-
+            Console.WriteLine();
+            
             for (int i = 0; i < boardSize; i++) {
                 if (i == 0) Console.Write("   ");
                 Console.Write(" " + (char)(i + 'A'));
@@ -174,21 +200,37 @@ namespace Reversi {
         public void Exit() {
             foreach (var VARIABLE in "Exiting...") {
                 Console.Write(VARIABLE);
-                Thread.Sleep(210);
+                Thread.Sleep(200);
             }
 
             Console.WriteLine("\nLoser.");
-            Thread.Sleep(200);
+            Thread.Sleep(230);
             Console.Clear();
         }
-        
-        // private void PrintScores() {
-        //     Console.WriteLine("Top scores:");
-        //     foreach (var score in scoreService.GetTopScores())
-        //     {
-        //         Console.WriteLine("{0} {1}", score.Player, score.Points);
-        //     }
-        // }
 
+        public String GetName() {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.Write("Your name: ");
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            return Console.ReadLine();
+        }
+        
+        public void PrintScores(IScoreService scoreService) {
+            Console.WriteLine("Top scores of the session:");
+            foreach (var score in scoreService.GetTopScores())
+            {
+                Console.WriteLine("{0} {1}", score.Player, score.Points);
+            }
+        }
+
+        public sbyte Restart() {
+            Console.Write("Play again? [y/n]:  ");
+            String answer = Console.ReadLine();
+            foreach (var symbol in answer) {
+                if (symbol.Equals('y') || symbol.Equals('Y')) return 0;
+            }
+
+            return -1;
+        }
     }
 }

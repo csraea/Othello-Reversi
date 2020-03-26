@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using NPuzzle.Entity;
 using NPuzzle.Service;
@@ -26,12 +27,9 @@ namespace Reversi {
             this.ui = ui;
             gameBoard = new Cell[boardSize, boardSize];
             _gameMode = gameMode;
-            humanPlayer = new HumanPlayer(this);
-            secondPlayer = (gameMode == 1) ? (Player) new AIPlayer(Behaviour.Mode.Easy, this) : new HumanPlayer(this);
+            humanPlayer = new HumanPlayer(this, ui.GetName(), ConsoleColor.Blue);
+            secondPlayer = (gameMode == 1) ? (Player) new AIPlayer(Behaviour.Mode.Easy, this, ConsoleColor.Red) : new HumanPlayer(this, ui.GetName(), ConsoleColor.Red);
             state = 2;
-            FillBoard(CellTypes.Free);
-            LocatePlayers();
-
         }
         
         private void LocatePlayers() {
@@ -50,33 +48,40 @@ namespace Reversi {
         }
 
         public sbyte StartGame() {
+            FillBoard(CellTypes.Free);
+            LocatePlayers();
             Player player = secondPlayer;
+            bool firstTurn = true;
             do {
                 player = (player == humanPlayer) ? secondPlayer : humanPlayer;
 
                 if(player == humanPlayer) DetermineUsableCells(CellTypes.Player1, CellTypes.Player2);
                 else DetermineUsableCells(CellTypes.Player2, CellTypes.Player1);
-
+                
                 ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
-
+                if(!firstTurn && secondPlayer.Name.Equals("Handsome Jack") && player == secondPlayer) ui.Think();
+                
                 if(!IsGameWinnable()) break;
                 if (!player.MakeTurn(ref gameBoard)) {
                         ui.Exit();
                         return 1;
                 }
 
-                
                 ChangeCellType(CellTypes.Usable, CellTypes.Free);
                 
                 if(player == humanPlayer) Magic(CellTypes.Player2, CellTypes.Player1); 
                 else Magic(CellTypes.Player1, CellTypes.Player2);
-                
+
+                firstTurn = false;
             } while (true);
             
-            // scoreService.AddScore(new Score{Player = Environment.UserName, Points = field.GetScore()});
-
+            scoreService.AddScore(new Score{Player = humanPlayer.Name, Points = humanPlayer.GetScore(gameBoard,CellTypes.Player1, boardSize)});
+            scoreService.AddScore(new Score{Player = secondPlayer.Name, Points = secondPlayer.GetScore(gameBoard,CellTypes.Player2, boardSize)});
+            ui.PrintScores(scoreService);
+            
             Console.ReadLine();
-            ui.Exit();
+            if (ui.Restart() > -1) return StartGame();
+            else ui.Exit();
             return 0;
         }
 

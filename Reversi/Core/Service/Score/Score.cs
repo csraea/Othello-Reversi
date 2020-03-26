@@ -8,5 +8,7 @@ namespace NPuzzle.Entity {
         public string Player { get; set; }
 
         public int Points { get; set; }
+        
+        public DateTime DateTime { get; set; }
     }
 }

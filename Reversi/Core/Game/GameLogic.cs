@@ -13,8 +13,8 @@ using Service;
 
 namespace Reversi {
     public class GameLogic {
-        private byte boardSize;
-        private Cell[,] gameBoard;
+        public byte boardSize { get; set; }
+        public Cell[,] GameBoard { get; set; }
         Player humanPlayer;
         Player secondPlayer;
         private int state;
@@ -24,27 +24,30 @@ namespace Reversi {
         private readonly IScoreService scoreService = new ScoreServiceFile();
         private readonly IRatingService ratingService = new RatingService();
 
-
+        public GameLogic(byte boardSize) {
+            this.boardSize = boardSize;
+        }
+        
         public GameLogic(byte boardSize, byte gameMode, UI ui) {
             this.boardSize = boardSize;
             this.ui = ui;
-            gameBoard = new Cell[boardSize, boardSize]; ;
+            GameBoard = new Cell[boardSize, boardSize];
             humanPlayer = new HumanPlayer(this, ui.GetName(), ConsoleColor.Blue);
             secondPlayer = (gameMode == 1) ? (Player) new AIPlayer(Behaviour.Mode.Easy, this, ConsoleColor.Red) : new HumanPlayer(this, ui.GetName(), ConsoleColor.Red);
             state = 2;
         }
         
         private void LocatePlayers() {
-            gameBoard[boardSize / 2, boardSize / 2 - 1].Type = CellTypes.Player2;
-            gameBoard[boardSize / 2 - 1, boardSize / 2].Type = CellTypes.Player2;
-            gameBoard[boardSize / 2, boardSize / 2].Type = CellTypes.Player1;
-            gameBoard[boardSize / 2 - 1, boardSize / 2 -1].Type = CellTypes.Player1;
+            GameBoard[boardSize / 2, boardSize / 2 - 1].Type = CellTypes.Player2;
+            GameBoard[boardSize / 2 - 1, boardSize / 2].Type = CellTypes.Player2;
+            GameBoard[boardSize / 2, boardSize / 2].Type = CellTypes.Player1;
+            GameBoard[boardSize / 2 - 1, boardSize / 2 -1].Type = CellTypes.Player1;
         }
 
         private void FillBoard(CellTypes cellType) {
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
-                    gameBoard[i, j] = new Cell(1, cellType, j, i);
+                    GameBoard[i, j] = new Cell(1, cellType, j, i);
                 }
             }
         }
@@ -63,11 +66,11 @@ namespace Reversi {
 
                 // UI based on player's turn. (1,3 - optional)
                 if (firstTurn && !ratingService.GetLastRatings().Count.Equals(0)) ui.PrintRating(ratingService);
-                ui.DisplayGame(humanPlayer, secondPlayer, gameBoard, boardSize);
+                ui.DisplayGame(humanPlayer, secondPlayer, GameBoard, boardSize);
                 if(!firstTurn && secondPlayer.Name.Equals("Handsome Jack") && player == secondPlayer) ui.Think();
                 
                 if(!IsGameWinnable()) break;
-                if (!player.MakeTurn(ref gameBoard)) {
+                if (!player.MakeTurn(GameBoard)) {
                         ui.Exit();
                         return 1;
                 }
@@ -80,8 +83,8 @@ namespace Reversi {
                 firstTurn = false;
             } while (true);
             
-            scoreService.AddScore(new Score{Player = humanPlayer.Name, Points = humanPlayer.GetScore(gameBoard,CellTypes.Player1, boardSize), Time = DateTime.Now});
-            scoreService.AddScore(new Score{Player = secondPlayer.Name, Points = secondPlayer.GetScore(gameBoard,CellTypes.Player2, boardSize), Time = DateTime.Now});
+            scoreService.AddScore(new Score{Player = humanPlayer.Name, Points = humanPlayer.GetScore(GameBoard,CellTypes.Player1, boardSize), Time = DateTime.Now});
+            scoreService.AddScore(new Score{Player = secondPlayer.Name, Points = secondPlayer.GetScore(GameBoard,CellTypes.Player2, boardSize), Time = DateTime.Now});
             ui.PrintScores(scoreService);
             
             Console.ReadLine();
@@ -91,9 +94,8 @@ namespace Reversi {
             
             ratingService.Rate(new Rating{Mark = ui.GetMark(), Player = humanPlayer.Name});
             if (ui.Restart() > -1) return StartGame();
-            else {
-                ui.Exit();
-            }
+            ui.Exit();
+            
             return 0;
         }
 
@@ -101,8 +103,8 @@ namespace Reversi {
             FindNeighbouring(target, with);
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
-                    if (gameBoard[i, j].Type == CellTypes.Neighbouring) {
-                        InspectCellByLine(gameBoard[i,j], with, 8, 1);
+                    if (GameBoard[i, j].Type == CellTypes.Neighbouring) {
+                        InspectCellByLine(GameBoard[i,j], with, 8, 1);
                     }
                 }
             }
@@ -121,15 +123,15 @@ namespace Reversi {
             ParseDirection(ref x, ref y, ref limit1, ref limit2, depth); //update variables
             
             //exact recursion
-            if (currentCell.X != limit1 && currentCell.Y != limit2 && gameBoard[currentCell.Y + y, currentCell.X + x].Type == type) {
-                InspectCellByLine(gameBoard[currentCell.Y + y, currentCell.X + x], type, depth, 0);
-            } else if (currentCell.X != limit1 && currentCell.Y != limit2 && gameBoard[currentCell.Y + y, currentCell.X + x].Type == CellTypes.Free && currentCell.Type == type) {
-                gameBoard[currentCell.Y + y, currentCell.X + x].Type = CellTypes.Usable;
+            if (currentCell.X != limit1 && currentCell.Y != limit2 && GameBoard[currentCell.Y + y, currentCell.X + x].Type == type) {
+                InspectCellByLine(GameBoard[currentCell.Y + y, currentCell.X + x], type, depth, 0);
+            } else if (currentCell.X != limit1 && currentCell.Y != limit2 && GameBoard[currentCell.Y + y, currentCell.X + x].Type == CellTypes.Free && currentCell.Type == type) {
+                GameBoard[currentCell.Y + y, currentCell.X + x].Type = CellTypes.Usable;
             }
             
             //change the direction
             while (recursionFlag == 1 && depth > 1) {
-                InspectCellByLine(gameBoard[initialY, initialX], type, --depth, 0);
+                InspectCellByLine(GameBoard[initialY, initialX], type, --depth, 0);
             }
         }
 
@@ -151,8 +153,8 @@ namespace Reversi {
             int substitution = 0;
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
-                    if (gameBoard[i, j].Type == CellTypes.Selected) {
-                        CompleteLine(gameBoard[i,j], type, playerCell, 8, 1,  ref substitution);
+                    if (GameBoard[i, j].Type == CellTypes.Selected) {
+                        CompleteLine(GameBoard[i,j], type, playerCell, 8, 1,  ref substitution);
                         ChangeCellType(CellTypes.Selected, playerCell);
                         return;
                     }
@@ -172,27 +174,27 @@ namespace Reversi {
             ParseDirection(ref x, ref y, ref limit1, ref limit2, depth); // update variables with the direction based on depth
             
             //exact recursion
-            if (currentCell.X != limit1 && currentCell.Y != limit2 && gameBoard[currentCell.Y + y, currentCell.X + x].Type == type) {
-                CompleteLine(gameBoard[currentCell.Y + y, currentCell.X + x], type, playerCell, depth, 0, ref substitution);
+            if (currentCell.X != limit1 && currentCell.Y != limit2 && GameBoard[currentCell.Y + y, currentCell.X + x].Type == type) {
+                CompleteLine(GameBoard[currentCell.Y + y, currentCell.X + x], type, playerCell, depth, 0, ref substitution);
                 if (substitution == 1 && currentCell.Type != CellTypes.Selected) currentCell.Type = playerCell;
                 if (currentCell.X == initialX && currentCell.Y == initialY) substitution = 0;
-            } else if (currentCell.X != limit1 && currentCell.Y != limit2 && gameBoard[currentCell.Y + y, currentCell.X + x].Type == playerCell && currentCell.Type == type) {
-                gameBoard[currentCell.Y, currentCell.X].Type = playerCell;
+            } else if (currentCell.X != limit1 && currentCell.Y != limit2 && GameBoard[currentCell.Y + y, currentCell.X + x].Type == playerCell && currentCell.Type == type) {
+                GameBoard[currentCell.Y, currentCell.X].Type = playerCell;
                 substitution = 1;
-            } else if (currentCell.X != limit1 && currentCell.Y != limit2 && (gameBoard[currentCell.Y + y, currentCell.X + x].Type == CellTypes.Free || gameBoard[currentCell.Y + y, currentCell.X + x].Type == CellTypes.Usable) && currentCell.Type == type) {
+            } else if (currentCell.X != limit1 && currentCell.Y != limit2 && (GameBoard[currentCell.Y + y, currentCell.X + x].Type == CellTypes.Free || GameBoard[currentCell.Y + y, currentCell.X + x].Type == CellTypes.Usable) && currentCell.Type == type) {
                 substitution = 0;
             }
 
             //change the direction
             while (recursionFlag == 1 && depth > 1) {
-                CompleteLine(gameBoard[initialY, initialX], type, playerCell, --depth, 0, ref substitution);
+                CompleteLine(GameBoard[initialY, initialX], type, playerCell, --depth, 0, ref substitution);
             }
         }
         
         private void ChangeCellType(CellTypes from, CellTypes to) {
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
-                    if (gameBoard[i, j].Type == from) gameBoard[i, j].Type = to;
+                    if (GameBoard[i, j].Type == from) GameBoard[i, j].Type = to;
                 }
             }
         }
@@ -200,38 +202,38 @@ namespace Reversi {
         private void FindNeighbouring(CellTypes type1, CellTypes type2) {
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
-                    if (i != 0 && gameBoard[i - 1, j].Type == type1 && gameBoard[i, j].Type == type2) {
-                        gameBoard[i - 1, j].Type = CellTypes.Neighbouring;
+                    if (i != 0 && GameBoard[i - 1, j].Type == type1 && GameBoard[i, j].Type == type2) {
+                        GameBoard[i - 1, j].Type = CellTypes.Neighbouring;
                     }
-                    if (i != boardSize - 1 && gameBoard[i + 1, j].Type == type1 && gameBoard[i, j].Type == type2) {
-                        gameBoard[i + 1, j].Type = CellTypes.Neighbouring;
+                    if (i != boardSize - 1 && GameBoard[i + 1, j].Type == type1 && GameBoard[i, j].Type == type2) {
+                        GameBoard[i + 1, j].Type = CellTypes.Neighbouring;
                     }
-                    if (j != 0 && gameBoard[i, j - 1].Type == type1 && gameBoard[i, j].Type == type2) {
-                        gameBoard[i, j - 1].Type = CellTypes.Neighbouring;
+                    if (j != 0 && GameBoard[i, j - 1].Type == type1 && GameBoard[i, j].Type == type2) {
+                        GameBoard[i, j - 1].Type = CellTypes.Neighbouring;
                     }
-                    if (j != boardSize - 1 && gameBoard[i, j + 1].Type == type1 && gameBoard[i, j].Type == type2) {
-                        gameBoard[i, j + 1].Type = CellTypes.Neighbouring;
+                    if (j != boardSize - 1 && GameBoard[i, j + 1].Type == type1 && GameBoard[i, j].Type == type2) {
+                        GameBoard[i, j + 1].Type = CellTypes.Neighbouring;
                     }
-                    if (i != 0 && j != 0 && gameBoard[i - 1, j - 1].Type == type1 && gameBoard[i, j].Type == type2) {
-                        gameBoard[i - 1, j - 1].Type = CellTypes.Neighbouring;
+                    if (i != 0 && j != 0 && GameBoard[i - 1, j - 1].Type == type1 && GameBoard[i, j].Type == type2) {
+                        GameBoard[i - 1, j - 1].Type = CellTypes.Neighbouring;
                     }
-                    if (i != boardSize - 1 && j != boardSize - 1 && gameBoard[i + 1, j + 1].Type == type1 && gameBoard[i, j].Type == type2) {
-                        gameBoard[i + 1, j + 1].Type = CellTypes.Neighbouring;
+                    if (i != boardSize - 1 && j != boardSize - 1 && GameBoard[i + 1, j + 1].Type == type1 && GameBoard[i, j].Type == type2) {
+                        GameBoard[i + 1, j + 1].Type = CellTypes.Neighbouring;
                     }
-                    if (i != 0 && j != boardSize - 1 && gameBoard[i - 1, j + 1].Type == type1 && gameBoard[i, j].Type == type2) {
-                        gameBoard[i - 1, j + 1].Type = CellTypes.Neighbouring;
+                    if (i != 0 && j != boardSize - 1 && GameBoard[i - 1, j + 1].Type == type1 && GameBoard[i, j].Type == type2) {
+                        GameBoard[i - 1, j + 1].Type = CellTypes.Neighbouring;
                     }
-                    if (j != 0 && i != boardSize - 1 && gameBoard[i + 1, j - 1].Type == type1 && gameBoard[i, j].Type == type2) {
-                        gameBoard[i + 1, j - 1].Type = CellTypes.Neighbouring;
+                    if (j != 0 && i != boardSize - 1 && GameBoard[i + 1, j - 1].Type == type1 && GameBoard[i, j].Type == type2) {
+                        GameBoard[i + 1, j - 1].Type = CellTypes.Neighbouring;
                     }
                 }
             }
         }
         
-        private bool IsGameWinnable() {
+        public bool IsGameWinnable() {
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
-                    if (gameBoard[i, j].Type == CellTypes.Usable) return true;
+                    if (GameBoard[i, j].Type == CellTypes.Usable) return true;
                 }
             }
 

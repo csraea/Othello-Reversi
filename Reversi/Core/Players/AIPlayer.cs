@@ -7,26 +7,26 @@ namespace Reversi.Core.Players {
         
         public AIPlayer(Behaviour.Mode mode, GameLogic gameLogic, ConsoleColor color) {
             Name = "Handsome Jack";
-            ai = CreateAI(mode, gameLogic);
+            ai = CreateAI(mode, gameLogic, this);
             _color = color;
         }
 
-        public override bool MakeTurn(ref Cell[,] gameBoard) {
+        public override bool MakeTurn(Cell[,] gameBoard) {
             ai.Sorcery(ref gameBoard);
             return true;
         }
 
-        private Behaviour CreateAI(Behaviour.Mode mode, GameLogic gameLogic) {
+        private Behaviour CreateAI(Behaviour.Mode mode, GameLogic gameLogic, Player player) {
             switch (mode) {
                 case Behaviour.Mode.Easy:
-                    return new AIEasy(gameLogic);
+                    return new AIEasy(gameLogic, player);
                 case Behaviour.Mode.Medium:
                     return new AIMedium();
                 case Behaviour.Mode.Difficult:
                     return new AIDifficult();
             }
             
-            return CreateAI((Behaviour.Mode) new Random().Next(2), gameLogic);
+            return CreateAI((Behaviour.Mode) new Random().Next(2), gameLogic, player);
         }
     }
 }

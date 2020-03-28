@@ -12,7 +12,7 @@ namespace Reversi {
             
         }
 
-        public abstract bool MakeTurn(ref Cell[,] gameBoard);
+        public abstract bool MakeTurn(Cell[,] gameBoard);
         
         public int GetScore(Cell[,] gameBoard, CellTypes cellType, byte boardSize) {
             int tempScore = 0;

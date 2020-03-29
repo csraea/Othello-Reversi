@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$USER_HOME$/.Rider2019.3/system/extResources" t="IncludeRecursive" />
+    <e p="$USER_HOME$/.Rider2019.3/system/resharper-host/local/Transient/ReSharperHost/v193/SolutionCaches/_.19.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="Console" t="Include">
+        <e p="Program.cs" t="Include" />
+      </e>
+      <e p="Core" t="Include">
+        <e p="Game" t="Include">
+          <e p="Cell" t="Include">
+            <e p="Cell.cs" t="Include" />
+            <e p="CellTypes.cs" t="Include" />
+          </e>
+          <e p="GameLogic.cs" t="Include" />
+        </e>
+        <e p="Players" t="Include">
+          <e p="AIBehaviours" t="Include">
+            <e p="AIDifficult.cs" t="Include" />
+            <e p="AIEasy.cs" t="Include" />
+            <e p="AIMedium.cs" t="Include" />
+            <e p="Behaviour.cs" t="Include" />
+          </e>
+          <e p="AIMode.cs" t="Include" />
+          <e p="AIPlayer.cs" t="Include" />
+          <e p="HumanPlayer.cs" t="Include" />
+          <e p="Player.cs" t="Include" />
+        </e>
+        <e p="Service" t="Include">
+          <e p="Comments" t="Include">
+            <e p="Comment.cs" t="Include" />
+            <e p="CommentService.cs" t="Include" />
+            <e p="ICommentService.cs" t="Include" />
+          </e>
+          <e p="Preservation" t="Include" />
+          <e p="Rating" t="Include">
+            <e p="IRatingService.cs" t="Include" />
+            <e p="Rating.cs" t="Include" />
+            <e p="RatingService.cs" t="Include" />
+          </e>
+          <e p="Score" t="Include">
+            <e p="IScoreService.cs" t="Include" />
+            <e p="Score.cs" t="Include" />
+            <e p="ScoreServiceFile.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="Reversi.csproj" t="IncludeRecursive" />
+      <e p="UI" t="Include">
+        <e p="ConsoleUI.cs" t="Include" />
+        <e p="UI.cs" t="Include" />
+      </e>
+      <e p="bin" t="ExcludeRecursive" />
+      <e p="obj" t="ExcludeRecursive">
+        <e p="Debug" t="Include">
+          <e p="netcoreapp3.1" t="Include">
+            <e p="Reversi.AssemblyInfo.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

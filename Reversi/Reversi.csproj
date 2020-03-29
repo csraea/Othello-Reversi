@@ -12,22 +12,21 @@
       <Compile Remove="Test\**" />
       <Compile Remove="Core\Players\AI\**" />
       <Compile Remove="Core\Players\AIMode.cs" />
+      <Compile Remove="Core\Service\Preservation\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="Core\Entity\**" />
       <EmbeddedResource Remove="Test\**" />
       <EmbeddedResource Remove="Core\Players\AI\**" />
+      <EmbeddedResource Remove="Core\Service\Preservation\**" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove="Core\Entity\**" />
       <None Remove="Test\**" />
       <None Remove="Core\Players\AI\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Core\Service\Preservation" />
+      <None Remove="Core\Service\Preservation\**" />
     </ItemGroup>
 
 </Project>

@@ -38,10 +38,8 @@ namespace Reversi.Core.Players.AIBehaviours {
         }
 
         private void MinimaxDecision(GameLogic logic, CellTypes whoseTurn, ref int bestY, ref int bestX) {
-            // Necessary? Already performs the action in the main game cycle
             CellTypes opponent = CellTypes.Player1;
             if (whoseTurn == CellTypes.Player1) opponent = CellTypes.Player2;
-            //logic.DetermineUsableCells(whoseTurn, opponent);
             GetPossibleMoves(logic.GameBoard, ref PossibleMoves);
             List<Cell> moves = new List<Cell>();
             foreach (var cell in PossibleMoves) {
@@ -112,58 +110,5 @@ namespace Reversi.Core.Players.AIBehaviours {
                 return bestValue;
             }
         }
-
-        /*
-         * int minimaxValue(char board[][8], char originalTurn, char currentTurn, int searchPly)
-{
-if ((searchPly == 5) || gameOver(board)) // Change to desired ply lookahead
-{
-return heuristic(board, originalTurn);
-}
-int moveX[60], moveY[60];
-int numMoves;
-char opponent = 'X';
-if (currentTurn == 'X')
-opponent = 'O';
-getMoveList(board, moveX, moveY, numMoves, currentTurn);
-if (numMoves == 0) // if no moves skip to next player's turn
-{
-return minimaxValue(board, originalTurn, opponent, searchPly + 1);
-}
-else
-{
-// Remember the best move
-int bestMoveVal = -99999; // for finding max
-if (originalTurn != currentTurn)
-bestMoveVal = 99999; // for finding min
-// Try out every single move
-for (int i = 0; i < numMoves; i++)
-{
-// Apply the move to a new board
-char tempBoard[8][8];
-copyBoard(board, tempBoard);
-makeMove(tempBoard, moveX[i], moveY[i], currentTurn);
-// Recursive call
-int val = minimaxValue(tempBoard, originalTurn, opponent,
-searchPly + 1);
-// Remember best move
-if (originalTurn == currentTurn)
-{
-// Remember max if it's the originator's turn
-if (val > bestMoveVal)
-bestMoveVal = val;
-}
-else
-{
-// Remember min if it's opponent turn
-if (val < bestMoveVal)
-bestMoveVal = val;
-}
-}
-return bestMoveVal;
-}
-return -1; // Should never get here
-}
-         */
     }
 }

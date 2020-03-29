@@ -18,7 +18,7 @@ namespace Reversi {
         private bool skippedTurn = false;
         
         private readonly ICommentService commentService = new CommentService();
-        private readonly IScoreService scoreService = new ScoreServiceFile();
+        private readonly IScoreService scoreService = new ScoreService();
         private readonly IRatingService ratingService = new RatingService();
 
         public GameLogic(byte boardSize) {

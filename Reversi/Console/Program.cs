@@ -1,7 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Net;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Reversi {
     class Program {

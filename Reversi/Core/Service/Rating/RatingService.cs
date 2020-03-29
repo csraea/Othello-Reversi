@@ -49,7 +49,7 @@ namespace Reversi.Core.Service.Rating {
                 total += r.Mark;
             }
 
-            return total / rating.Count;
+            return (rating.Count == 0) ? total : total / rating.Count;
         }
     }
 }

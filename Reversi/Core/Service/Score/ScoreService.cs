@@ -5,7 +5,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Service;
 
 namespace Reversi.Core.Service.Score {
-    public class ScoreServiceFile : IScoreService {
+    public class ScoreService : IScoreService {
         private const string FileName = "score.bin";
 
         private List<Score> scores = new List<Score>();
@@ -42,7 +42,7 @@ namespace Reversi.Core.Service.Score {
             if (File.Exists(FileName)) {
                 using (var fs = File.OpenRead(FileName)) {
                     var bf = new BinaryFormatter();
-                    scores = (List<Score>)bf.Deserialize(fs);
+                    if(fs.Length != 0) scores = (List<Score>)bf.Deserialize(fs);
                 }
             }
         }

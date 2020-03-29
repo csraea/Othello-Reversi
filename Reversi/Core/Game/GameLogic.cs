@@ -1,14 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using NPuzzle.Entity;
-using NPuzzle.Service;
 using Reversi.Core.Players;
-using Reversi.Core.Players.AIBehaviours;
 using Reversi.Core.Service.Comments;
 using Reversi.Core.Service.Rating;
+using Reversi.Core.Service.Score;
 using Service;
 
 namespace Reversi {

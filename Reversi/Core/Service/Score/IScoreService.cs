@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using NPuzzle.Entity;
+using Reversi.Core.Service.Score;
 
 namespace Service {
     public interface IScoreService {

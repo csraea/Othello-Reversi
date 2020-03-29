@@ -2,10 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using NPuzzle.Entity;
 using Service;
 
-namespace NPuzzle.Service {
+namespace Reversi.Core.Service.Score {
     public class ScoreServiceFile : IScoreService {
         private const string FileName = "score.bin";
 

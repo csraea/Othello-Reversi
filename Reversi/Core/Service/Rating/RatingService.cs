@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
-using NPuzzle.Entity;
 
 namespace Reversi.Core.Service.Rating {
     public class RatingService : IRatingService{

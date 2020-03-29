@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NPuzzle.Entity {
+namespace Reversi.Core.Service.Score {
     [Serializable]
     public class Score {
 

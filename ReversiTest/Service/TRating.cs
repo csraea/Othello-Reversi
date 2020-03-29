@@ -92,7 +92,7 @@ namespace ReversiTest.Service {
         [TestMethod]
         public void GetAverageRating3() {
             var ratingService = RatingService();
-
+            ratingService.GetLastRatings();
             Assert.AreEqual<float>(0f, ratingService.GetAverageRating());
         }
     }

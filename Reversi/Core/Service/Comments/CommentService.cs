@@ -40,7 +40,7 @@ namespace Reversi.Core.Service.Comments {
             if (File.Exists(FileName)) {
                 using (var fs = File.OpenRead(FileName)) {
                     var bf = new BinaryFormatter();
-                    comments = (List<Comment>)bf.Deserialize(fs);
+                    if(fs.Length != 0) comments = (List<Comment>)bf.Deserialize(fs);
                 }
             }
         }

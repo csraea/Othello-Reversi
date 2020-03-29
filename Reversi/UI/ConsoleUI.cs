@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading;
 using Reversi.Core.Players;
+using Reversi.Core.Players.AIBehaviours;
 using Reversi.Core.Service.Comments;
 using Reversi.Core.Service.Rating;
 using Service;
@@ -319,6 +320,33 @@ namespace Reversi {
             }
             
             return (!success) ? CheckMark() : result;
+        }
+
+        public Behaviour.Mode GetDifficulty() {
+            Console.ForegroundColor = ConsoleColor.DarkCyan;
+            Console.Write("Enter the difficulty [1/2]: ");
+            Console.ForegroundColor = ConsoleColor.Red;
+            string input = Console.ReadLine();
+            bool success = true;
+            int answer = 0;
+            try {
+                answer = Convert.ToInt16(input);
+            }
+            catch (FormatException) {
+                Console.WriteLine("Invalid input!");
+                success = false;
+            }
+            catch (OverflowException) {
+                Console.WriteLine("Invalid input!");
+                success = false;
+            }
+
+            if (answer < 1 || answer > 2) {
+                Console.WriteLine("Invalid input!");
+                success = false;
+            }
+            
+            return (!success) ? GetDifficulty() : (Behaviour.Mode)(answer-1);
         }
     }
 }

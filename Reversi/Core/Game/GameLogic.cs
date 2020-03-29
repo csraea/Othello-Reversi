@@ -19,6 +19,8 @@ namespace Reversi {
         Player secondPlayer;
         private int state;
         private UI ui;
+
+        private bool skippedTurn = false;
         
         private readonly ICommentService commentService = new CommentService();
         private readonly IScoreService scoreService = new ScoreServiceFile();
@@ -26,6 +28,7 @@ namespace Reversi {
 
         public GameLogic(byte boardSize) {
             this.boardSize = boardSize;
+            GameBoard = new Cell[boardSize, boardSize];
         }
         
         public GameLogic(byte boardSize, byte gameMode, UI ui) {
@@ -33,7 +36,7 @@ namespace Reversi {
             this.ui = ui;
             GameBoard = new Cell[boardSize, boardSize];
             humanPlayer = new HumanPlayer(this, ui.GetName(), ConsoleColor.Blue);
-            secondPlayer = (gameMode == 1) ? (Player) new AIPlayer(Behaviour.Mode.Easy, this, ConsoleColor.Red) : new HumanPlayer(this, ui.GetName(), ConsoleColor.Red);
+            secondPlayer = (gameMode == 1) ? (Player) new AIPlayer(ui.GetDifficulty(), this, ConsoleColor.Red) : new HumanPlayer(this, ui.GetName(), ConsoleColor.Red);
             state = 2;
         }
         
@@ -61,15 +64,20 @@ namespace Reversi {
             do {
                 player = (player == humanPlayer) ? secondPlayer : humanPlayer;
 
-                if(player == humanPlayer) DetermineUsableCells(CellTypes.Player1, CellTypes.Player2);
-                else DetermineUsableCells(CellTypes.Player2, CellTypes.Player1);
+                if (!skippedTurn) {
+                    if (player == humanPlayer) DetermineUsableCells(CellTypes.Player1, CellTypes.Player2);
+                    else DetermineUsableCells(CellTypes.Player2, CellTypes.Player1);
+                }
+                skippedTurn = false;
 
                 // UI based on player's turn. (1,3 - optional)
                 if (firstTurn && !ratingService.GetLastRatings().Count.Equals(0)) ui.PrintRating(ratingService);
                 ui.DisplayGame(humanPlayer, secondPlayer, GameBoard, boardSize);
                 if(!firstTurn && secondPlayer.Name.Equals("Handsome Jack") && player == secondPlayer) ui.Think();
-                
-                if(!IsGameWinnable()) break;
+
+                sbyte winnable = IsGameWinnable(player == humanPlayer ? CellTypes.Player1 : CellTypes.Player2);
+                if(winnable == -1) break;
+                if(winnable == 0) goto NEXTPLAYER;
                 if (!player.MakeTurn(GameBoard)) {
                         ui.Exit();
                         return 1;
@@ -81,6 +89,9 @@ namespace Reversi {
                 else Magic(CellTypes.Player1, CellTypes.Player2);
 
                 firstTurn = false;
+                
+                NEXTPLAYER: ;
+                
             } while (true);
             
             scoreService.AddScore(new Score{Player = humanPlayer.Name, Points = humanPlayer.GetScore(GameBoard,CellTypes.Player1, boardSize), Time = DateTime.Now});
@@ -230,18 +241,24 @@ namespace Reversi {
             }
         }
         
-        public bool IsGameWinnable() {
+        public sbyte IsGameWinnable(CellTypes nowPlaying) {
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
-                    if (GameBoard[i, j].Type == CellTypes.Usable) return true;
+                    if (GameBoard[i, j].Type == CellTypes.Usable) return 1;
                 }
             }
-
-            return false;
+            
+            DetermineUsableCells(nowPlaying == CellTypes.Player1 ? CellTypes.Player2 : CellTypes.Player1 ,nowPlaying);
+            
+            for (int i = 0; i < boardSize; i++) {
+                for (int j = 0; j < boardSize; j++) {
+                    if (GameBoard[i, j].Type == CellTypes.Usable) return 0;
+                }
+            }
+            
+            return -1;
         }
-
-
-        private byte BoardSize => boardSize;
+        
     }
 }
 

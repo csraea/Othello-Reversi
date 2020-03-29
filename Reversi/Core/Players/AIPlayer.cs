@@ -21,7 +21,7 @@ namespace Reversi.Core.Players {
                 case Behaviour.Mode.Easy:
                     return new AIEasy(gameLogic, player);
                 case Behaviour.Mode.Medium:
-                    return new AIMedium();
+                    return new AIMedium(gameLogic, player);
                 case Behaviour.Mode.Difficult:
                     return new AIDifficult();
             }

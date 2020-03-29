@@ -1,5 +1,6 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
+using Reversi.Core.Players.AIBehaviours;
 using Reversi.Core.Service.Comments;
 using Reversi.Core.Service.Rating;
 using Service;
@@ -24,5 +25,7 @@ namespace Reversi {
         sbyte Restart();
         void PrintRating(IRatingService ratingService);
         int GetMark();
+
+        Behaviour.Mode GetDifficulty();
     }
 }

@@ -1,8 +1,6 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reversi.Core.Service.Comments;
-using Reversi.Core.Service.Score;
-using Service;
 
 namespace Reversi.Test {
     

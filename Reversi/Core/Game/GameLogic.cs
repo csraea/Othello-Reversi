@@ -35,14 +35,14 @@ namespace Reversi {
             state = 2;
         }
         
-        private void LocatePlayers() {
+        public void LocatePlayers() {
             GameBoard[boardSize / 2, boardSize / 2 - 1].Type = CellTypes.Player2;
             GameBoard[boardSize / 2 - 1, boardSize / 2].Type = CellTypes.Player2;
             GameBoard[boardSize / 2, boardSize / 2].Type = CellTypes.Player1;
             GameBoard[boardSize / 2 - 1, boardSize / 2 -1].Type = CellTypes.Player1;
         }
 
-        private void FillBoard(CellTypes cellType) {
+        public void FillBoard(CellTypes cellType) {
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
                     GameBoard[i, j] = new Cell(1, cellType, j, i);

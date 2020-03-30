@@ -59,7 +59,10 @@ namespace ReversiTest.Game {
             logic.LocatePlayers();
             
             logic.secondPlayer = new AIPlayer(Behaviour.Mode.Easy, logic, ConsoleColor.Red);
+            logic.DetermineUsableCells(CellTypes.Player2, CellTypes.Player1);
             logic.secondPlayer.MakeTurn(logic.GameBoard);
+            logic.ChangeCellType(CellTypes.Usable, CellTypes.Free);
+            logic.Magic(CellTypes.Player1, CellTypes.Player2);
 
             Assert.AreEqual(3, logic.secondPlayer.GetScore(logic.GameBoard, CellTypes.Player2, logic.boardSize));
         }

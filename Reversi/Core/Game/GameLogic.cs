@@ -10,12 +10,12 @@ namespace Reversi {
     public class GameLogic {
         public byte boardSize { get; set; }
         public Cell[,] GameBoard { get; set; }
-        Player humanPlayer;
-        Player secondPlayer;
+        public Player humanPlayer;
+        public Player secondPlayer;
         private int state;
         private UI ui;
 
-        private bool skippedTurn = false;
+        public bool skippedTurn;
         
         private readonly ICommentService commentService = new CommentService();
         private readonly IScoreService scoreService = new ScoreService();
@@ -154,8 +154,8 @@ namespace Reversi {
                 default: return;
             }
         }
-        
-        private void Magic(CellTypes type, CellTypes playerCell) {
+
+        public void Magic(CellTypes type, CellTypes playerCell) {
             int substitution = 0;
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
@@ -196,8 +196,8 @@ namespace Reversi {
                 CompleteLine(GameBoard[initialY, initialX], type, playerCell, --depth, 0, ref substitution);
             }
         }
-        
-        private void ChangeCellType(CellTypes from, CellTypes to) {
+
+        public void ChangeCellType(CellTypes from, CellTypes to) {
             for (int i = 0; i < boardSize; i++) {
                 for (int j = 0; j < boardSize; j++) {
                     if (GameBoard[i, j].Type == from) GameBoard[i, j].Type = to;

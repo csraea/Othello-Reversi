@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="89c0b7e0-9a4a-4298-9b10-187924a4d83c" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Reversi/UI/UI.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/UI/ConsoleUI.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ReversiTest/Service/TComment.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/Console/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/Core/Game/GameLogic.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/Core/Service/Rating/RatingService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/Core/Service/Score/ScoreService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/Core/Service/Score/IScoreService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ReversiTest/Service/TScore.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/Core/Service/Score/Score.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/Core/Players/AIBehaviours/AIEasy.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/Core/Players/AIBehaviours/AIMedium.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/Core/Service/Comments/Comment.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ReversiTest/Service/TRating.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Reversi/Core/Service/Comments/CommentService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ReversiTest/Game/TAI.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/ReversiTest/Game/TLogic.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/ReversiTest/UnitTest1.cs" />
+        <option value="$PROJECT_DIR$/ReversiTest/TScore.cs" />
+        <option value="$PROJECT_DIR$/Reversi/Console/Program.cs" />
+        <option value="$PROJECT_DIR$/ReversiTest/Game/TAI.cs" />
+        <option value="$PROJECT_DIR$/ReversiTest/Service/TScore.cs" />
+        <option value="$PROJECT_DIR$/Reversi/Core/Service/Score/ScoreService.cs" />
+        <option value="$PROJECT_DIR$/Reversi/Core/Service/Rating/RatingService.cs" />
+        <option value="$PROJECT_DIR$/Reversi/Core/Players/AIBehaviours/AIMedium.cs" />
+        <option value="$PROJECT_DIR$/Reversi/Core/Service/Comments/CommentService.cs" />
+        <option value="$PROJECT_DIR$/ReversiTest/Service/TRating.cs" />
+        <option value="$PROJECT_DIR$/ReversiTest/Service/TComment.cs" />
+        <option value="$PROJECT_DIR$/Reversi/Core/Game/GameLogic.cs" />
+        <option value="$PROJECT_DIR$/ReversiTest/Game/TLogic.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea/.idea.Othello/.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1ZoGKXIEPeuo0pO6imLVD7ko4fW" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Rider.SolutionExplorerActivator" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="TWShift.3" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../npuzzle2020-master" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+  </component>
+  <component name="RunManager" selected=".NET Project.Reversi">
+    <configuration name="Reversi" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/Reversi/Reversi.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value="" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="89c0b7e0-9a4a-4298-9b10-187924a4d83c" name="Default Changelist" comment="" />
+      <created>1585497970584</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1585497970584</updated>
+      <workItem from="1585497976123" duration="1073000" />
+      <workItem from="1585505957266" duration="9575000" />
+      <workItem from="1585566246746" duration="3505000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="739" y="300" width="426" height="482" key="FileChooserDialogImpl" timestamp="1585498449862">
+      <screen x="0" y="34" width="1920" height="1018" />
+    </state>
+    <state x="739" y="300" width="426" height="482" key="FileChooserDialogImpl/0.34.1920.1018@0.34.1920.1018" timestamp="1585498449862" />
+    <state x="551" y="277" width="802" height="528" key="Rider.ProjectTemplateDialog.Size" timestamp="1585498082572">
+      <screen x="0" y="34" width="1920" height="1018" />
+    </state>
+    <state x="551" y="277" width="802" height="528" key="Rider.ProjectTemplateDialog.Size/0.34.1920.1018@0.34.1920.1018" timestamp="1585498082572" />
+    <state x="460" y="177" key="SettingsEditor" timestamp="1585511317246">
+      <screen x="0" y="34" width="1920" height="1018" />
+    </state>
+    <state x="460" y="177" key="SettingsEditor/0.34.1920.1018@0.34.1920.1018" timestamp="1585511317246" />
+  </component>
+</project>

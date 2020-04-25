@@ -16,10 +16,14 @@ namespace Reversi {
         private UI ui;
 
         public bool skippedTurn;
-        
-        private readonly ICommentService commentService = new CommentService();
-        private readonly IScoreService scoreService = new ScoreService();
-        private readonly IRatingService ratingService = new RatingService();
+
+        //        private readonly ICommentService commentService = new CommentService();
+        //        private readonly IScoreService scoreService = new ScoreService();
+        //        private readonly IRatingService ratingService = new RatingService();
+
+        private readonly ICommentService commentService = new CommentServiceEF();
+        private readonly IScoreService scoreService = new ScoreServiceEF();
+        private readonly IRatingService ratingService = new RatingServiceEF();
 
         public GameLogic(byte boardSize) {
             this.boardSize = boardSize;

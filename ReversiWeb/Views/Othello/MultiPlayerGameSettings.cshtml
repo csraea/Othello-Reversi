@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewData["Title"] = "MultiPlayerGameSettings";
+}
+
+<a asp-area=""
+   asp-controller="Othello"
+   asp-action="AdjustHumanPlayer"
+   asp-route-color="0"
+   asp-route-name="Tito"
+   asp-route-pattern="SePlayer">
+
+    <h1>Generate human player</h1>
+</a>
+<h4>No setting now available. [Tito | 0]</h4>
+
+
+
+<a asp-area=""
+   asp-controller="Othello"
+   asp-action="AdjustHumanPlayer"
+   asp-route-color="1"
+   asp-route-name="Lenin"
+   asp-route-pattern="HuPlayer">
+
+    <h1>Generate human player</h1>
+</a>
+<h4>No setting now available. [Lenin | 1]</h4>
+
+
+<a asp-area=""
+   asp-controller="Othello"
+   asp-action="AdjustBoard"
+   asp-route-boardsize="6">
+
+    <h1>Generate board</h1>
+</a>
+
+
+<a asp-area=""
+   asp-controller="Othello"
+   asp-action="StartGame">
+
+    <h1>Start game</h1>
+</a>

@@ -1,0 +1,90 @@
+﻿@using Reversi
+@using Microsoft.AspNetCore.Http
+
+
+@model OthelloModel
+
+@{
+    ViewData["Title"] = "NPuzzle";
+}
+
+
+@* <ol> *@
+@*     @foreach (var score in Model.Scores) *@
+@*     { *@
+@*         <li>@(score.Player) @(score.Points)</li> *@
+@*     } *@
+@* </ol> *@
+
+<div class="game-board">
+    
+    <span style="font-size: 36px; margin-left: auto; margin-right: auto; margin-bottom: 24px"><b>
+        <span style="color: @Model.Logic.humanPlayer.strColor">
+            @Model.Logic.humanPlayer.GetScore(Model.Logic.GameBoard, CellTypes.Player1, Model.Logic.boardSize)
+        </span>
+        :
+        <span style="color: @Model.Logic.secondPlayer.strColor">
+            @Model.Logic.secondPlayer.GetScore(Model.Logic.GameBoard, CellTypes.Player2, Model.Logic.boardSize)
+        </span>
+    </b></span>
+
+    <table>
+        @for (var row = 0; row < Model.Logic.boardSize; row++)
+        {
+            var color = "#d9d9d9";
+            <tr>
+                @for (var column = 0; column < Model.Logic.boardSize; column++)
+                {
+                    var tile = Model.Logic.GameBoard[row, column];
+
+                    if (tile.Type == CellTypes.Free)
+                    {
+                        color = "#d9d9d9";
+                    }
+                    if (tile.Type == CellTypes.Usable)
+                    {
+                        color = "#b0ffc8";
+                    }
+                    if (tile.Type == CellTypes.Player1)
+                    {
+                        color = @Model.Logic.humanPlayer.strColor;
+                    }
+                    if (tile.Type == CellTypes.Player2)
+                    {
+                        color = @Model.Logic.secondPlayer.strColor;
+                    }
+
+
+                    <td>
+                        <a asp-area=""
+                           asp-controller="Othello"
+                           asp-action="NewMove"
+                           asp-route-y="@row"
+                           asp-route-x="@column">
+                            <div class="box" style="background-color: @color"></div></a>
+                    </td>
+
+                }
+            </tr>
+        }
+    </table>
+</div>
+
+
+<a asp-area=""
+   asp-controller="Othello"
+   asp-action="AIMove">
+    <img src="~/lib/images/Handsome_Jack.png" alt="Handsome Jack" style="float: left; height: 35vh; width: auto; bottom: 0px" />
+</a>
+
+    @if (Model.Opinion != null)
+    {
+        var time = @Model.Opinion.Length / 9 + "s";
+
+        <div class="typewriter">
+            <div class="typewriter-text" style="animation: typing @time steps(@Model.Opinion.Length, end), blink .75s step-end infinite;">@Model.Opinion</div>
+        </div>
+    }
+
+
+

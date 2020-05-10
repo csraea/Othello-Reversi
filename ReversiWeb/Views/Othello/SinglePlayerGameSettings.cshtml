@@ -1,0 +1,137 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@{
+    ViewData["Title"] = "SinglePlayerGameSettings";
+}
+
+
+
+
+    <div class="container">
+
+        <form method="post" asp-controller="Othello" asp-action="AdjustSinglePlayer">
+            <div class="row">
+
+                <div class="col-md">
+                    <div class="picker">
+                        <div style="margin-left: 5%">Red</div> <input class="sl" type="range" min="0" max="255" step="1" id="red" name="red" value="255">
+                        <div style="margin-left: 5%">Green</div> <input class="sl" type="range" min="0" max="255" step="1" id="green" name="green" value="0">
+                        <div style="margin-left: 5%">Blue</div> <input class="sl" type="range" min="0" max="255" step="1" id="blue" name="blue" value="0">
+
+                        <div id="display" style="margin-left: auto; margin-right: auto;"><b>Handsome Jack</b></div>
+
+                    </div>
+                    <script type="text/javascript">
+                        var input = document.querySelectorAll("input");
+                        for (var i = 0; i < input.length; i++) {
+                            input[i].addEventListener("input",
+                                function () {
+                                    var red = document.getElementById("red").value,
+                                        green = document.getElementById("green").value,
+                                        blue = document.getElementById("blue").value;
+                                    var display = document.getElementById("display");
+                                    display.style.background = "rgb(" + red + ", " + green + ", " + blue + ")";
+                                    if ((red > 200 && blue > 200) || (red > 200 && green > 200) || (green > 200 && blue > 180)) display.style.color = "black";
+                                    else display.style.color = "#ffffff";
+                                });
+                        }
+                    </script>
+                </div>
+
+                <div class="col-md">
+
+                    <div class="picker">
+                        <div style="margin-left: 5%">Red</div> <input class="sl" type="range" min="0" max="255" step="1" id="red1" name="red1" value="0">
+                        <div style="margin-left: 5%">Green</div> <input class="sl" type="range" min="0" max="255" step="1" id="green1" name="green1" value="68">
+                        <div style="margin-left: 5%">Blue</div> <input class="sl" type="range" min="0" max="255" step="1" id="blue1" name="blue1" value="255">
+
+                        <div id="display1" style="margin-left: auto; margin-right: auto;"><b>Hero</b></div>
+
+                    </div>
+
+                    <script type="text/javascript">
+                        var input = document.querySelectorAll("input");
+                        for (var i = 0; i < input.length; i++) {
+                            input[i].addEventListener("input",
+                                function () {
+                                    var red = document.getElementById("red1").value,
+                                        green = document.getElementById("green1").value,
+                                        blue = document.getElementById("blue1").value;
+                                    var display = document.getElementById("display1");
+                                    display.style.background = "rgb(" + red + ", " + green + ", " + blue + ")";
+                                    if ((red > 200 && blue > 200) || (red > 200 && green > 200) || (green > 200 && blue > 180)) display.style.color = "black";
+                                    else display.style.color = "#ffffff";
+                                });
+                        }
+                    </script>
+
+                </div>
+            </div>
+
+            <div class="row">
+                
+            <div class="col-md">
+                
+                
+                </div>
+
+
+
+            <div class="col-md">
+                <div class="name" style="margin: 20%; margin-left: 10%">
+                    <label for="name" style="font-size: 24px;">Name:</label><br>
+                    <input type="text" name="fname" id="fname" size="32" title="max. 32 characters" required spellcheck="true" lang="en" autocomplete="on"
+                           placeholder="Hero" style="border-radius: 10px; text-align: center; font-size: 24px; font-family: Courier, monospace; font-weight: bold; width: 115%" /><br>
+                </div>
+
+                <input type="submit" value="Submit" />
+            </div>
+            </div>
+
+        </form>
+    </div>
+
+
+
+@*
+<a asp-area=""
+   asp-controller="Othello"
+   asp-action="AdjustAI"
+   asp-route-mode="Medium"
+   asp-route-color="">
+
+    <h1>Generate AI</h1>
+</a>
+<h4>No setting now available. [Medium | 1]</h4>
+
+
+
+<a asp-area=""
+   asp-controller="Othello"
+   asp-action="AdjustHumanPlayer"
+   asp-route-color="blue"
+   asp-route-name="Lenin"
+   asp-route-pattern="HuPlayer">
+
+    <h1>Generate human player</h1>
+</a>
+<h4>No setting now available. [Lenin | 0]</h4>
+
+
+
+<a asp-area=""
+   asp-controller="Othello"
+   asp-action="AdjustBoard"
+   asp-route-boardsize="8">
+
+    <h1>Generate board</h1>
+</a>
+
+
+<a asp-area=""
+   asp-controller="Othello"
+   asp-action="StartGame">
+
+    <h1>Start game</h1>
+</a>
+*@

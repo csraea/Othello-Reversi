@@ -1,0 +1,39 @@
+﻿@model OthelloModel
+
+@{
+    ViewData["Title"] = "Reversi";
+}
+
+    <div style="text-align: center">
+        <h1>Othello</h1>
+
+        <a asp-area="" asp-controller="Othello" asp-action="SinglePlayerGameSettings">
+            <h3> Single player</h3>
+        </a>
+
+        <a asp-area="" asp-controller="Othello" asp-action="MultiPlayerGameSettings">
+            <h3> Multi-player</h3>
+        </a>
+
+        <a asp-area="" asp-controller="Othello" asp-action="ScoreTable">
+            <h3> Score Table</h3>
+        </a>
+
+        <a asp-area="" asp-controller="Othello" asp-action="CommentTable">
+            <h3> Recent Comments</h3>
+        </a>
+
+        <a asp-area="" asp-controller="Othello" asp-action="Rules">
+            <h3> Rules</h3>
+        </a>
+
+        <a asp-area="" asp-controller="Othello" asp-action="About">
+            <h3> About</h3>
+        </a>
+
+    </div>
+
+
+<br />
+
+

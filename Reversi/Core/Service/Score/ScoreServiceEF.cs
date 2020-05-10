@@ -1,10 +1,13 @@
-﻿using Service;
+﻿using System;
+using Service;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace Reversi.Core.Service.Score
 {
+
+    [Serializable]
     public class ScoreServiceEF : IScoreService
     {
         public void AddScore(Score score)

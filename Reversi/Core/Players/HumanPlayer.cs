@@ -1,6 +1,8 @@
 using System;
 
 namespace Reversi {
+
+    [Serializable]
     public class HumanPlayer : Player {
         private GameLogic _gameLogic;
         
@@ -8,6 +10,21 @@ namespace Reversi {
             _gameLogic = gameLogic;
             Name = name;
             _color = color;
+        }
+
+
+        public HumanPlayer(GameLogic gameLogic, String name, string color)
+        {
+            _gameLogic = gameLogic;
+            Name = name;
+            strColor = color;
+        }
+
+
+        public HumanPlayer(GameLogic gameLogic)
+        {
+            _gameLogic = gameLogic;
+
         }
 
         public override bool MakeTurn(Cell[,] gameBoard) {
@@ -44,5 +61,14 @@ namespace Reversi {
             return true;
         }
 
+        public override bool MakeAdvancedTurn(int y, int x, Cell[,] gameBoard)
+        {
+            if (!CheckAndPlace(y, x, CellTypes.Selected, ref gameBoard))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

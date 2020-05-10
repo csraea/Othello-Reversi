@@ -24,6 +24,10 @@ namespace ReversiWeb
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            // Adds a default in-memory implementation of IDistributedCache.
+            services.AddDistributedMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,19 +43,23 @@ namespace ReversiWeb
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseHttpsRedirection();
+
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseSession();
+
+            app.UseCookiePolicy();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Othello}/{action=Index}/{id?}");
             });
+            //https://docs.microsoft.com/en-us/aspnet/core/migration/22-to-30?view=aspnetcore-3.0&tabs=visual-studio
+            //https://stackoverflow.com/questions/58266344/net-core-3-mvc-using-usemvcwithdefaultroute-to-configure-mvc-is-not-suppo
         }
     }
 }

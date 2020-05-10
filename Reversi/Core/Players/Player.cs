@@ -1,9 +1,14 @@
 using System;
 
 namespace Reversi {
+
+    [Serializable]
     public abstract class Player {
         public String Name { get; set; }
         public ConsoleColor _color { get; set; }
+        public int IntColor { get; set; }
+
+        public string strColor { get; set; }
 
         protected Player(String name) {
         }
@@ -13,6 +18,7 @@ namespace Reversi {
         }
 
         public abstract bool MakeTurn(Cell[,] gameBoard);
+        public abstract bool MakeAdvancedTurn(int y, int x, Cell[,] gameBoard);
         
         public int GetScore(Cell[,] gameBoard, CellTypes cellType, byte boardSize) {
             int tempScore = 0;

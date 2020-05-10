@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace Reversi.Core.Players.AIBehaviours {
+
+    [Serializable]
     public class AIMedium : Behaviour {
         
         public AIMedium(GameLogic logic, Player player) {

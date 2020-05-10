@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 
 namespace Reversi.Core.Players.AIBehaviours {
+
+    [Serializable]
     public class AIEasy : Behaviour {
 
         public AIEasy(GameLogic logic, Player player) {

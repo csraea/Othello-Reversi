@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 
 namespace Reversi.Core.Players.AIBehaviours {
+
+    [Serializable]
     public abstract class Behaviour {
-        protected GameLogic Logic { get; set; }
-        protected Player Player { get; set; }
+        public GameLogic Logic { get; set; }
+        public Player Player { get; set; }
 
         protected static List<Cell> PossibleMoves = PossibleMoves ?? new List<Cell>();
         public enum Mode {

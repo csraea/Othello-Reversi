@@ -1,9 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace Reversi.Core.Service.Rating
 {
+
+    [Serializable]
     public class RatingServiceEF : IRatingService
     {
         public void Rate(Rating rating)

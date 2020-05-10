@@ -2,8 +2,10 @@ using System;
 using Reversi.Core.Players.AIBehaviours;
 
 namespace Reversi.Core.Players {
+
+    [Serializable]
     public class AIPlayer : Player {
-        private Behaviour ai;
+        public Behaviour ai { get; set; }
         
         public AIPlayer(Behaviour.Mode mode, GameLogic gameLogic, ConsoleColor color) {
             Name = "Handsome Jack";
@@ -11,10 +13,25 @@ namespace Reversi.Core.Players {
             _color = color;
         }
 
+        public AIPlayer(Behaviour.Mode mode, GameLogic gameLogic, string color)
+        {
+            Name = "Handsome Jack";
+            ai = CreateAI(mode, gameLogic, this);
+            strColor = color;
+        }
+
         public override bool MakeTurn(Cell[,] gameBoard) {
             ai.Sorcery(ref gameBoard);
             return true;
         }
+
+
+
+        public override bool MakeAdvancedTurn(int y, int x, Cell[,] gameBoard)
+        {
+            return MakeTurn(gameBoard);
+        }
+
 
         private Behaviour CreateAI(Behaviour.Mode mode, GameLogic gameLogic, Player player) {
             switch (mode) {

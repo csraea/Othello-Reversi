@@ -1,4 +1,8 @@
+using System;
+
 namespace Reversi {
+    
+    [Serializable]
     public enum CellTypes {
         Free,
         Usable,

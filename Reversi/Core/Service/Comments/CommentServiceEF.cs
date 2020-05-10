@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Collections.Generic;
 
 
 namespace Reversi.Core.Service.Comments
 {
+    [Serializable]
     public class CommentServiceEF : ICommentService
     {
         public void AddComment(Comment comment)

@@ -1,6 +1,8 @@
 using System;
 
 namespace Reversi {
+
+    [Serializable]
     public class Cell {
         private byte weight;
         private CellTypes _type;

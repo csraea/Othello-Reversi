@@ -10,7 +10,7 @@ There are 4 difficulties (behaviours) of Jack:
 *  **- Impossible**: Jack behaves as in the *Difficult* mode, but with increased depth (7). Moreover, he cheats.
  
 
--In the Singleplayer mode in the web project, **Jack is so cool** that **Jack is even able to play with himself!** User only have to click his image continuously.
+-In the Singleplayer mode in the web project, **Jack is so selfish and cool** that **Jack is even able to play with himself!**. In this way, he shows his **independence and awesomeness**. User only has to click his image continuously.
 
 When the Singleplayer mode is on, it is possible to turn on/off the tips (usable cells) and *"hilarious  Jack's comments"* and change the colors of players in the web project.
 The comments and rating, unfortunately, are not implemented in the web project due to the lack of time. Hovewer, they are already implemented in the console application.

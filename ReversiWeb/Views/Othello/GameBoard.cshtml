@@ -1,0 +1,76 @@
+﻿@using Reversi
+
+@model OthelloModel
+
+    <span>
+        <h6 style="font-size: 36px; margin-left: auto; margin-right: auto; margin-bottom: 24px">@Model.Message</h6>
+    </span>
+    <br />
+    <span style="font-size: 36px; margin-left: auto; margin-right: auto; margin-bottom: 24px">
+        <b style="margin-left: auto; margin-right: auto">
+            <span style="color: @Model.Logic.humanPlayer.strColor">
+                @Model.Logic.humanPlayer.Name
+                @Model.Logic.humanPlayer.GetScore(Model.Logic.GameBoard, CellTypes.Player1, Model.Logic.boardSize)
+            </span>
+            :
+            <span style="color: @Model.Logic.secondPlayer.strColor">
+                @Model.Logic.secondPlayer.Name
+                @Model.Logic.secondPlayer.GetScore(Model.Logic.GameBoard, CellTypes.Player2, Model.Logic.boardSize)
+            </span>
+        </b>
+    </span>
+
+
+
+
+    <div class="row">
+        <div class="col-md">
+            <table style="margin-left: auto; margin-right: auto">
+                @for (var row = 0; row < Model.Logic.boardSize; row++)
+                {
+                    var color = "#d9d9d9";
+                    <tr>
+                        @for (var column = 0; column < Model.Logic.boardSize; column++)
+                        {
+                            var tile = Model.Logic.GameBoard[row, column];
+
+                            if (tile.Type == CellTypes.Free)
+                            {
+                                color = "#d9d9d9";
+                            }
+                            if (tile.Type == CellTypes.Selected)
+                            {
+                                color = "yellow";
+                            }
+                            if (tile.Type == CellTypes.Usable)
+                            {
+                                if(!Model.tips) {color = "#b0ffc8";}
+                                else {color = "#d9d9d9";}
+                            }
+                            if (tile.Type == CellTypes.Player1)
+                            {
+                                color = @Model.Logic.humanPlayer.strColor;
+                            }
+                            if (tile.Type == CellTypes.Player2)
+                            {
+                                color = @Model.Logic.secondPlayer.strColor;
+                            }
+
+
+                            <td>
+                                <a asp-area=""
+                                   asp-controller="Othello"
+                                   asp-action="NewMove"
+                                   asp-route-y="@row"
+                                   asp-route-x="@column">
+                                    <div class="box" style="background-color: @color">@*@Model.Logic.GameBoard[row, column].Type*@</div>
+                                </a>
+                            </td>
+
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+
+    </div>

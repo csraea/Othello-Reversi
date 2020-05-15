@@ -12,7 +12,8 @@ namespace Reversi.Core.Players.AIBehaviours {
         public enum Mode {
             Easy,
             Medium,
-            Difficult
+            Difficult,
+            Impossible
         }
 
         public abstract void Sorcery(ref Cell[,] gameBoard);

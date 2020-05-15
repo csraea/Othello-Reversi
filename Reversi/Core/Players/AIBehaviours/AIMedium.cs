@@ -14,10 +14,17 @@ namespace Reversi.Core.Players.AIBehaviours {
 
         public override void Sorcery(ref Cell[,] gameBoard) {
             int bestX = -1, bestY = -1;
-            MinimaxDecision(Logic, CellTypes.Player2, ref bestY, ref bestX);
+
+            GameLogic l = Logic;
+
+            MinimaxDecision(ref l, CellTypes.Player2, ref bestY, ref bestX);
+            Logic = l;
             if (bestX != -1 && bestY != -1) {
-                Logic.GameBoard[bestY, bestX].Type = CellTypes.Selected;
+                gameBoard[bestY, bestX].Type = CellTypes.Selected;
             }
+
+            
+
         }
 
         private int Heruistic(CellTypes whoseTurn, GameLogic logic) {
@@ -40,7 +47,7 @@ namespace Reversi.Core.Players.AIBehaviours {
             return copy;
         }
 
-        private void MinimaxDecision(GameLogic logic, CellTypes whoseTurn, ref int bestY, ref int bestX) {
+        private void MinimaxDecision(ref GameLogic logic, CellTypes whoseTurn, ref int bestY, ref int bestX) {
             CellTypes opponent = CellTypes.Player1;
             if (whoseTurn == CellTypes.Player1) opponent = CellTypes.Player2;
             GetPossibleMoves(logic.GameBoard, ref PossibleMoves);
@@ -52,7 +59,9 @@ namespace Reversi.Core.Players.AIBehaviours {
                 bestX = -1;
                 bestY = -1;
             }
-            else {
+            else
+            {
+
                 int bestValue = -99999;
                 for (int i = 0; i < moves.Count; i++) {
 
@@ -75,7 +84,7 @@ namespace Reversi.Core.Players.AIBehaviours {
         private int MinimaxValue(GameLogic logic, int depth, CellTypes originalTurn, CellTypes currentTurn) {
             
             logic.DetermineUsableCells(currentTurn, (currentTurn == CellTypes.Player1) ? CellTypes.Player2 : CellTypes.Player1);
-            if (depth == 5 || logic.IsGameWinnable(currentTurn) == -1) {
+            if (depth == 3 || logic.IsGameWinnable(currentTurn) == -1) {
                 return Heruistic(originalTurn, logic);
             }
             

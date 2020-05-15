@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Reversi.Core.Players;
+using Reversi.Core.Players.AIBehaviours;
 using Reversi.Core.Service.Comments;
 using Reversi.Core.Service.Rating;
 using Reversi.Core.Service.Score;
@@ -61,11 +62,20 @@ namespace Reversi {
 
         public void FillBoard(CellTypes cellType)
         {
+            
             for (int i = 0; i < boardSize; i++)
             {
+                byte weight = 1;
+
                 for (int j = 0; j < boardSize; j++)
                 {
-                    GameBoard[i, j] = new Cell(1, cellType, j, i);
+                    if ((i == 0 && j == 0) || (i == 0 && j == boardSize - 1) ||
+                        (i == boardSize - 1 && i == boardSize - 1) || (j == 0 && i == boardSize - 1))
+                    {
+                        weight = 10;
+                    }
+    
+                    GameBoard[i, j] = new Cell(weight, cellType, j, i);
                 }
             }
         }
@@ -97,11 +107,17 @@ namespace Reversi {
                 sbyte winnable = IsGameWinnable(player == humanPlayer ? CellTypes.Player1 : CellTypes.Player2);
                 if (winnable == -1) break;
                 if (winnable == 0) goto NEXTPLAYER;
-                if (!player.MakeTurn(GameBoard))
+
+                Cell[,] gameboard = GameBoard; 
+
+                if (!player.MakeTurn(ref gameboard))
                 {
                     ui.Exit();
                     return 1;
                 }
+
+                GameBoard = gameboard;
+
 
                 ChangeCellType(CellTypes.Usable, CellTypes.Free);
 
@@ -111,6 +127,8 @@ namespace Reversi {
                 firstTurn = false;
 
                 NEXTPLAYER: ;
+
+                Console.WriteLine(""+((AIPlayer)secondPlayer).ai);
 
             } while (true);
 

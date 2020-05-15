@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.VisualStudio.Web.CodeGeneration;
 using Reversi;
 using Reversi.Core.Players;
@@ -23,6 +24,7 @@ namespace ReversiWeb.Controllers
         private Behaviour.Mode aiMode;
         private string aiColor;
         private CellTypes pl, en;
+        
         public IActionResult Index()
         {
             var logic = new GameLogic();
@@ -68,6 +70,7 @@ namespace ReversiWeb.Controllers
         {
             HttpContext.Session.SetObject("BSize", boardSize);
 
+
             return View("SinglePlayerGameSettings");
         }
 
@@ -86,7 +89,7 @@ namespace ReversiWeb.Controllers
 
 
 
-        public IActionResult StartGame()
+        public IActionResult StartGame(bool mp)
         {
             GameLogic logic = ObtainLogic();
             logic.humanPlayer = ObtainHuPlayer();
@@ -102,27 +105,55 @@ namespace ReversiWeb.Controllers
             byte nowPlaying = 0;
             HttpContext.Session.SetObject("now", nowPlaying);
 
-            var model = InitializeModel("game started", null);
+            var model = InitializeModel(ObtainHuPlayer().Name + "'s move", null);
             model.NowPlaying = ObtainPlayer();
             
             PushModel(model);
 
-            return View("GamePl1", model);
+            return mp ? View("GamePl2", model) : View("GamePl1", model);
             //return Content("Logic was pushed to the current context, model was generated");
         }
 
         public IActionResult AIMove()
         {
-            var model = InitializeModel("Jack's move", ObtainLogic().Think());
+            var model = InitializeModel(ObtainHuPlayer().Name+"'s move", ObtainLogic().Think());
 
             model = UpdateMoveInfo(model);
-            if (model.Logic.IsGameWinnable(pl) == 0) return View("GamePl1", model);
-            if (model.Logic.IsGameWinnable(pl) == -1)
+            if (model.Logic.IsGameWinnable(pl) == 0)
             {
+                PushModel(model);
+                return View("GamePl1", model);
+            }
+            if (model.Logic.IsGameWinnable(pl) == -1 || model.Logic.IsGameWinnable(en) == -1)
+            {
+
+                IScoreService service = ObtainSService();
+
+
+
+                service.AddScore(new Score
+                {
+                    Player = model.Logic.secondPlayer.Name,
+                    Points = model.Logic.secondPlayer.GetScore(model.Logic.GameBoard, CellTypes.Player2, model.Logic.boardSize),
+                    Time = DateTime.Now
+                });
+                service.AddScore(new Score
+                {
+                    Player = model.Logic.humanPlayer.Name,
+                    Points = model.Logic.humanPlayer.GetScore(model.Logic.GameBoard, CellTypes.Player1, model.Logic.boardSize),
+                    Time = DateTime.Now
+                });
+
+
                 return Content("THE END");
             }
-            model.Logic.secondPlayer = new AIPlayer(aiMode, ObtainLogic(), ObtainAIColor());
-            model.Logic.secondPlayer.MakeTurn(model.Logic.GameBoard);
+            model.Logic.secondPlayer = new AIPlayer((Behaviour.Mode)HttpContext.Session.GetObject("ai"), ObtainLogic(), ObtainAIColor());
+
+            Cell[,] g = model.Logic.GameBoard;
+
+            model.Logic.secondPlayer.MakeTurn(ref g);
+
+            model.Logic.GameBoard = g;
 
             model.Logic.ChangeCellType(CellTypes.Usable, CellTypes.Free);
             model.Logic.Magic(en, pl);
@@ -134,24 +165,60 @@ namespace ReversiWeb.Controllers
 
         }
 
+
+
         public IActionResult NewMove(int y, int x)
         {
-            var model = InitializeModel("new move", null);
+
+            byte pla = ObtainPlayer();
+
+            var model = pla == 0
+                ? InitializeModel(ObtainSePlayer().Name + "'s move", null)
+                : InitializeModel(ObtainHuPlayer().Name + "'s move", null);
+
+            bool mp = (bool)HttpContext.Session.GetObject("Real");
+
+            string view = mp ? "GamePl2" : "GamePl1";
 
             model = UpdateMoveInfo(model);
-            if (model.Logic.IsGameWinnable(pl) == 0) return View("GamePl1", model);
-            if (model.Logic.IsGameWinnable(pl) == -1)
+            if (model.Logic.IsGameWinnable(pl) == 0)
             {
+                PushModel(model);
+                return View(view, model);
+            }
+            if (model.Logic.IsGameWinnable(pl) == -1 || model.Logic.IsGameWinnable(en) == -1)
+            {
+                IScoreService service = ObtainSService();
+
+
+
+                service.AddScore(new Score
+                {
+                    Player = model.Logic.secondPlayer.Name,
+                    Points = model.Logic.secondPlayer.GetScore(model.Logic.GameBoard, CellTypes.Player2, model.Logic.boardSize),
+                    Time = DateTime.Now
+                });
+                service.AddScore(new Score
+                {
+                    Player = model.Logic.humanPlayer.Name,
+                    Points = model.Logic.humanPlayer.GetScore(model.Logic.GameBoard, CellTypes.Player1, model.Logic.boardSize),
+                    Time = DateTime.Now
+                });
+
+
+
                 return Content("THE END");
             }
             if (model.Logic.GameBoard[y, x].Type == CellTypes.Usable)
                 model.Logic.GameBoard[y, x].Type = CellTypes.Selected;
+
+                
             else
             {
                 model.Message = "Wrong cell selected!";
                 model.NowPlaying = model.NowPlaying == 0 ? (byte)1 : (byte)0;
                 PushModel(model);
-                return View("GamePl1", model);
+                return View(view, model);
             }
 
 
@@ -160,7 +227,7 @@ namespace ReversiWeb.Controllers
             model.Logic.DetermineUsableCells(en, pl);
 
             PushModel(model);
-            return View("GamePl1", model);
+            return View(view, model);
 
         }
 
@@ -186,34 +253,66 @@ namespace ReversiWeb.Controllers
 
 
         [HttpPost]
-        public IActionResult AdjustSinglePlayer(int red, int green, int blue, int red1, int green1, int blue1)
+        public IActionResult AdjustSinglePlayer(int red, int green, int blue, int red1, int green1, int blue1, string name, int boardSize, bool usable, bool jack, string difficulty)
         {
-            var HuPlayer = new HumanPlayer(ObtainLogic(), "Lenin", "rgb(" + red1 + ", " + green1 + ", " + blue1 + ")");
+            var HuPlayer = new HumanPlayer(ObtainLogic(), name, "rgb(" + red1 + ", " + green1 + ", " + blue1 + ")");
             HttpContext.Session.SetObject("HuPlayer", HuPlayer);
 
-            var SePlayer = new AIPlayer(Behaviour.Mode.Medium, ObtainLogic(), "rgb(" + red + ", " + green + ", " + blue + ")");
+            var SePlayer = new AIPlayer((Behaviour.Mode) Int32.Parse( difficulty), ObtainLogic(), "rgb(" + red + ", " + green + ", " + blue + ")");
             HttpContext.Session.SetObject("SePlayer", SePlayer);
 
-            aiMode = Behaviour.Mode.Medium;
+            aiMode = (Behaviour.Mode)int.Parse(difficulty);
             aiColor = "rgb(" + red + ", " + green + ", " + blue + ")";
             HttpContext.Session.SetObject("AIcolor", aiColor);
-
+            HttpContext.Session.SetObject("ai", aiMode);
 
             bool mp = false;
             HttpContext.Session.SetObject("Real", mp);
 
-            byte bs = 8;
-            HttpContext.Session.SetObject("BSize", bs);
+            HttpContext.Session.SetObject("BSize", (byte) boardSize);
 
 
 
+            bool us = usable;
+            bool ja = jack;
+            HttpContext.Session.SetObject("usable", us);
+            HttpContext.Session.SetObject("jack", ja);
 
-
-            return StartGame();
+            return StartGame(mp);
         }
 
 
+        [HttpPost]
+        public IActionResult AdjustMultiPlayer(int red, int green, int blue, int red1, int green1, int blue1, string name, string name1, int boardSize)
+        {
+            var HuPlayer = new HumanPlayer(ObtainLogic(), name, "rgb(" + red + ", " + green + ", " + blue + ")");
+            HttpContext.Session.SetObject("HuPlayer", HuPlayer);
 
+            var SePlayer = new HumanPlayer(ObtainLogic(), name1, "rgb(" + red1 + ", " + green1 + ", " + blue1 + ")");
+            HttpContext.Session.SetObject("SePlayer", SePlayer);
+
+
+            bool mp = true;
+            HttpContext.Session.SetObject("Real", mp);
+
+            HttpContext.Session.SetObject("BSize", (byte)boardSize);
+
+            bool ja = false;
+            HttpContext.Session.SetObject("jack", ja); 
+            bool us = false;
+            HttpContext.Session.SetObject("usable", us);
+
+
+            return StartGame(mp);
+        }
+
+
+        public IActionResult DisplayScores()
+        {
+            var model = InitModel("display scores", null);
+
+            return View("ScoreTable",model);
+        }
 
 
 
@@ -237,7 +336,24 @@ namespace ReversiWeb.Controllers
                 Scores = ObtainSService().GetTopScores(),
                 Comments = ObtainCService().GetLastComments(),
                 Ratings = ObtainRService().GetLastRatings(),
-                NowPlaying = ObtainPlayer()
+                NowPlaying = ObtainPlayer(),
+                tips = (bool)HttpContext.Session.GetObject("usable"),
+                jack = (bool)HttpContext.Session.GetObject("jack")
+
+
+        };
+        }
+
+        private OthelloModel InitModel(string message, string opinion)
+        {
+            return new OthelloModel
+            {
+                Logic = ObtainLogic(),
+                Message = message,
+                Opinion = opinion,
+                Scores = ObtainSService().GetTopScores(),
+                Comments = ObtainCService().GetLastComments(),
+                Ratings = ObtainRService().GetLastRatings()
             };
         }
 

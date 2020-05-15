@@ -1,0 +1,237 @@
+﻿@using Reversi
+@using Microsoft.AspNetCore.Http
+
+
+@model OthelloModel
+
+@{
+    ViewData["Title"] = "Othello";
+}
+
+
+@* <ol> *@
+@*     @foreach (var score in Model.Scores) *@
+@*     { *@
+@*         <li>@(score.Player) @(score.Points)</li> *@
+@*     } *@
+@* </ol> *@
+
+
+<style>
+                .circles {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                z-index: -1;
+            }
+
+            .circles li {
+                position: absolute;
+                display: block;
+                list-style: none;
+                width: 20px;
+                height: 20px;
+                background: rgba(255, 255, 255, 0.2);
+                animation: animate 25s linear infinite;
+                bottom: -150px;
+                z-index: -1;
+            }
+
+            .circles li:nth-child(1) {
+                left: 25%;
+                width: 80px;
+                height: 80px;
+                animation-delay: 0s;
+                background: rgba(255, 255, 0, 0.2);
+            }
+
+
+            .circles li:nth-child(2){
+                left: 10%;
+                width: 50px;
+                height: 50px;
+                animation-delay: 2s;
+                animation-duration: 12s;
+                background: rgba(125, 125, 255, 0.2);
+            }
+
+            .circles li:nth-child(3){
+                left: 70%;
+                width: 20px;
+                height: 20px;
+                animation-delay: 4s;
+                background: rgba(255, 0, 255, 0.2);
+            }
+
+            .circles li:nth-child(4){
+                left: 40%;
+                width: 60px;
+                height: 60px;
+                animation-delay: 0s;
+                animation-duration: 18s;
+            }
+
+            .circles li:nth-child(5){
+                left: 65%;
+                width: 20px;
+                height: 20px;
+                animation-delay: 0s;
+                background: rgba(0, 255, 255, 0.2);
+            }
+
+            .circles li:nth-child(6){
+                left: 75%;
+                width: 110px;
+                height: 110px;
+                animation-delay: 3s;
+                background: rgba(255, 0, 0, 0.2);
+            }
+
+            .circles li:nth-child(7){
+                left: 35%;
+                width: 130px;
+                height: 130px;
+                animation-delay: 7s;
+                background: rgba(0, 255, 0, 0.2);
+            }
+
+            .circles li:nth-child(8){
+                left: 50%;
+                width: 25px;
+                height: 25px;
+                animation-delay: 15s;
+                animation-duration: 45s;
+                background: rgba(255, 100, 25, 0.2);
+            }
+
+            .circles li:nth-child(9){
+                left: 20%;
+                width: 15px;
+                height: 15px;
+                animation-delay: 2s;
+                animation-duration: 35s;
+                background: rgba(0, 0, 255, 0.2);
+            }
+
+            .circles li:nth-child(10) {
+                left: 85%;
+                width: 150px;
+                height: 150px;
+                animation-delay: 0s;
+                animation-duration: 30s;
+                background: rgba(111, 80, 255, 0.2);
+            }
+
+            .circles li:nth-child(11) {
+                left: 5%;
+                width: 20px;
+                height: 20px;
+                animation-delay: 0s;
+                animation-duration: 19s;
+                background: rgba(111, 255, 255, 0.2);
+            }
+            .circles li:nth-child(12) {
+                left: 0%;
+                width: 90px;
+                height: 90px;
+                animation-delay: 10s;
+                animation-duration: 12s;
+                background: rgba(255, 255, 0, 0.2);
+            }
+
+            .circles li:nth-child(13) {
+                left: 55%;
+                width: 10px;
+                height: 10px;
+                animation-delay: 5s;
+                animation-duration: 25s;
+                background: rgba(0, 255, 255, 0.2);
+            }
+
+
+            .circles li:nth-child(14) {
+                left: 95%;
+                width: 35px;
+                height: 35px;
+                animation-delay: 8s;
+                animation-duration: 10s;
+            }
+
+            .circles li:nth-child(15) {
+                left: 91%;
+                width: 15px;
+                height: 15px;
+                animation-delay: 10s;
+                animation-duration: 41s;
+                background: rgba(255, 50, 255, 0.2);
+            }
+
+            .circles li:nth-child(16) {
+                left: 5%;
+                width: 18px;
+                height: 18px;
+                animation-delay: 14s;
+                animation-duration: 29s;
+                background: rgba(255, 0, 0, 0.2);
+            }
+
+
+
+            @@keyframes animate {
+
+                0% {
+                    transform: translateY(0) rotate(0deg);
+                    opacity: 1;
+                    border-radius: 0;
+                }
+
+                100% {
+                    transform: translateY(-1000px) rotate(720deg);
+                    opacity: 0;
+                    border-radius: 50%;
+                }
+            }
+
+
+            @@media screen and (max-width: 767px) {
+                body {
+                    overflow-y: visible;
+                }
+            }
+</style>
+
+
+<body>
+
+
+    <div class="game-board">
+
+        <partial name="GameBoard" model="Model"/>
+
+        
+
+    <ul class="circles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+    
+    </div>
+
+</body>

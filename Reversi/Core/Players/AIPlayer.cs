@@ -20,16 +20,15 @@ namespace Reversi.Core.Players {
             strColor = color;
         }
 
-        public override bool MakeTurn(Cell[,] gameBoard) {
+        public override bool MakeTurn(ref Cell[,] gameBoard) {
             ai.Sorcery(ref gameBoard);
             return true;
         }
 
 
-
         public override bool MakeAdvancedTurn(int y, int x, Cell[,] gameBoard)
         {
-            return MakeTurn(gameBoard);
+            return MakeTurn(ref gameBoard);
         }
 
 
@@ -40,10 +39,14 @@ namespace Reversi.Core.Players {
                 case Behaviour.Mode.Medium:
                     return new AIMedium(gameLogic, player);
                 case Behaviour.Mode.Difficult:
-                    return new AIDifficult();
+                    return new AIDifficult(gameLogic, player);
+                case Behaviour.Mode.Impossible:
+                    return new AIImpossible(gameLogic, player);
             }
+
+            return null;
             
-            return CreateAI((Behaviour.Mode) new Random().Next(2), gameLogic, player);
+            return CreateAI((Behaviour.Mode) new Random().Next(3), gameLogic, player);
         }
     }
 }

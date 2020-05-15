@@ -143,3 +143,6 @@ C:\Users\csrae\OneDrive\Desktop\reversi2020-master\ReversiWeb\obj\Debug\netcorea
 C:\Users\csrae\OneDrive\Desktop\reversi2020-master\ReversiWeb\obj\Debug\netcoreapp3.1\Razor\Views\Othello\SinglePlayerGameSettings.cshtml.g.cs
 C:\Users\csrae\OneDrive\Desktop\reversi2020-master\ReversiWeb\obj\Debug\netcoreapp3.1\Razor\Views\Othello\GamePl1.cshtml.g.cs
 C:\Users\csrae\OneDrive\Desktop\reversi2020-master\ReversiWeb\obj\Debug\netcoreapp3.1\Razor\Views\Othello\MultiPlayerGameSettings.cshtml.g.cs
+C:\Users\csrae\OneDrive\Desktop\reversi2020-master\ReversiWeb\obj\Debug\netcoreapp3.1\Razor\Views\Othello\GamePl2.cshtml.g.cs
+C:\Users\csrae\OneDrive\Desktop\reversi2020-master\ReversiWeb\obj\Debug\netcoreapp3.1\Razor\Views\Othello\GameBoard.cshtml.g.cs
+C:\Users\csrae\OneDrive\Desktop\reversi2020-master\ReversiWeb\obj\Debug\netcoreapp3.1\Razor\Views\Othello\ScoreTable.cshtml.g.cs

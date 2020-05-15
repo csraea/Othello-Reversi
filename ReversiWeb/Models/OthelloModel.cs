@@ -17,7 +17,6 @@ namespace ReversiWeb.Models
 
         public string Opinion { get; set; }
 
-        
         public bool RealPlayers { get; set; }
         public string Message { get; set; }
 
@@ -26,5 +25,11 @@ namespace ReversiWeb.Models
         public IList<Comment> Comments { get; set; }
 
         public IList<Rating> Ratings { get; set; }
+
+
+        public bool jack { get; set; }
+
+        public bool tips { get; set; }
     }
-}
+    }
+

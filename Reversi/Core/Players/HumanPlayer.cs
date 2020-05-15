@@ -27,7 +27,7 @@ namespace Reversi {
 
         }
 
-        public override bool MakeTurn(Cell[,] gameBoard) {
+        public override bool MakeTurn(ref Cell[,] gameBoard) {
             Console.ForegroundColor = _color;
             Console.Write(Name);
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -46,7 +46,7 @@ namespace Reversi {
                 posY = (char) (Char.ToUpper(posY) - 'A');
             } else {
                 Console.ReadLine();
-                return MakeTurn(gameBoard);
+                return MakeTurn(ref gameBoard);
             }
             
             Console.ResetColor();
@@ -54,7 +54,7 @@ namespace Reversi {
                 Console.ReadLine();
                 
                 if(!CheckAndPlace(posY, posX, CellTypes.Selected, ref gameBoard)) {
-                    return MakeTurn(gameBoard);
+                    return MakeTurn(ref gameBoard);
                 }
             }
             

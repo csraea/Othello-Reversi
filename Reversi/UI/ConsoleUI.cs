@@ -324,7 +324,7 @@ namespace Reversi {
 
         public Behaviour.Mode GetDifficulty() {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.Write("Enter the difficulty [1/2]: ");
+            Console.Write("Enter the difficulty [1/2/3/4]: ");
             Console.ForegroundColor = ConsoleColor.Red;
             string input = Console.ReadLine();
             bool success = true;
@@ -341,7 +341,7 @@ namespace Reversi {
                 success = false;
             }
 
-            if (answer < 1 || answer > 2) {
+            if (answer < 1 || answer > 4) {
                 Console.WriteLine("Invalid input!");
                 success = false;
             }

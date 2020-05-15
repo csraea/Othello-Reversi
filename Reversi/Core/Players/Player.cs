@@ -17,7 +17,7 @@ namespace Reversi {
             
         }
 
-        public abstract bool MakeTurn(Cell[,] gameBoard);
+        public abstract bool MakeTurn(ref Cell[,] gameBoard);
         public abstract bool MakeAdvancedTurn(int y, int x, Cell[,] gameBoard);
         
         public int GetScore(Cell[,] gameBoard, CellTypes cellType, byte boardSize) {
@@ -26,6 +26,23 @@ namespace Reversi {
                 for (int j = 0; j < boardSize; j++) {
                     if (gameBoard[i, j].Type == cellType) {
                         tempScore++;
+                    }
+                }
+            }
+
+            return tempScore;
+        }
+
+        public int GetAdvancedScore(Cell[,] gameBoard, CellTypes cellType, byte boardSize)
+        {
+            int tempScore = 0;
+            for (int i = 0; i < boardSize; i++)
+            {
+                for (int j = 0; j < boardSize; j++)
+                {
+                    if (gameBoard[i, j].Type == cellType)
+                    {
+                        tempScore += gameBoard[i,j].Weight;
                     }
                 }
             }

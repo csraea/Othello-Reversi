@@ -1,45 +1,473 @@
-﻿
+﻿@using Microsoft.AspNetCore.Http
+
 @{
     ViewData["Title"] = "MultiPlayerGameSettings";
 }
 
-<a asp-area=""
-   asp-controller="Othello"
-   asp-action="AdjustHumanPlayer"
-   asp-route-color="0"
-   asp-route-name="Tito"
-   asp-route-pattern="SePlayer">
+<head>
+    <style>
 
-    <h1>Generate human player</h1>
-</a>
-<h4>No setting now available. [Tito | 0]</h4>
+        body {
+            overflow-y: hidden;
+        }
 
+        .context {
+            width: 100%;
+            position: absolute;
+            top: 50vh;
+        }
 
-
-<a asp-area=""
-   asp-controller="Othello"
-   asp-action="AdjustHumanPlayer"
-   asp-route-color="1"
-   asp-route-name="Lenin"
-   asp-route-pattern="HuPlayer">
-
-    <h1>Generate human player</h1>
-</a>
-<h4>No setting now available. [Lenin | 1]</h4>
+            .context h1 {
+                text-align: center;
+                color: #fff;
+                font-size: 50px;
+            }
 
 
-<a asp-area=""
-   asp-controller="Othello"
-   asp-action="AdjustBoard"
-   asp-route-boardsize="6">
+        .area {
+            /*background: #4e54c8;
+                background: -webkit-linear-gradient(to left, #8f94fb, #4e54c8);*/
+            width: 100%;
+            height: 100vh;
+        }
 
-    <h1>Generate board</h1>
-</a>
+        .circles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+            .circles li {
+                position: absolute;
+                display: block;
+                list-style: none;
+                width: 20px;
+                height: 20px;
+                background: rgba(255, 255, 255, 0.2);
+                animation: animate 25s linear infinite;
+                bottom: -150px;
+                z-index: -1;
+            }
+
+                .circles li:nth-child(1) {
+                    left: 25%;
+                    width: 80px;
+                    height: 80px;
+                    animation-delay: 0s;
+                    background: rgba(255, 255, 0, 0.2);
+                }
 
 
-<a asp-area=""
-   asp-controller="Othello"
-   asp-action="StartGame">
+                .circles li:nth-child(2) {
+                    left: 10%;
+                    width: 50px;
+                    height: 50px;
+                    animation-delay: 2s;
+                    animation-duration: 12s;
+                    background: rgba(125, 125, 255, 0.2);
+                }
 
-    <h1>Start game</h1>
-</a>
+                .circles li:nth-child(3) {
+                    left: 70%;
+                    width: 20px;
+                    height: 20px;
+                    animation-delay: 4s;
+                    background: rgba(255, 0, 255, 0.2);
+                }
+
+                .circles li:nth-child(4) {
+                    left: 40%;
+                    width: 60px;
+                    height: 60px;
+                    animation-delay: 0s;
+                    animation-duration: 18s;
+                }
+
+                .circles li:nth-child(5) {
+                    left: 65%;
+                    width: 20px;
+                    height: 20px;
+                    animation-delay: 0s;
+                    background: rgba(0, 255, 255, 0.2);
+                }
+
+                .circles li:nth-child(6) {
+                    left: 75%;
+                    width: 110px;
+                    height: 110px;
+                    animation-delay: 3s;
+                    background: rgba(255, 0, 0, 0.2);
+                }
+
+                .circles li:nth-child(7) {
+                    left: 35%;
+                    width: 130px;
+                    height: 130px;
+                    animation-delay: 7s;
+                    background: rgba(0, 255, 0, 0.2);
+                }
+
+                .circles li:nth-child(8) {
+                    left: 50%;
+                    width: 25px;
+                    height: 25px;
+                    animation-delay: 15s;
+                    animation-duration: 45s;
+                    background: rgba(255, 100, 25, 0.2);
+                }
+
+                .circles li:nth-child(9) {
+                    left: 20%;
+                    width: 15px;
+                    height: 15px;
+                    animation-delay: 2s;
+                    animation-duration: 35s;
+                    background: rgba(0, 0, 255, 0.2);
+                }
+
+                .circles li:nth-child(10) {
+                    left: 85%;
+                    width: 150px;
+                    height: 150px;
+                    animation-delay: 0s;
+                    animation-duration: 30s;
+                    background: rgba(111, 80, 255, 0.2);
+                }
+
+                .circles li:nth-child(11) {
+                    left: 5%;
+                    width: 20px;
+                    height: 20px;
+                    animation-delay: 0s;
+                    animation-duration: 19s;
+                    background: rgba(111, 255, 255, 0.2);
+                }
+
+                .circles li:nth-child(12) {
+                    left: 0%;
+                    width: 90px;
+                    height: 90px;
+                    animation-delay: 10s;
+                    animation-duration: 12s;
+                    background: rgba(255, 255, 0, 0.2);
+                }
+
+                .circles li:nth-child(13) {
+                    left: 55%;
+                    width: 10px;
+                    height: 10px;
+                    animation-delay: 5s;
+                    animation-duration: 25s;
+                    background: rgba(0, 255, 255, 0.2);
+                }
+
+
+                .circles li:nth-child(14) {
+                    left: 95%;
+                    width: 35px;
+                    height: 35px;
+                    animation-delay: 8s;
+                    animation-duration: 10s;
+                }
+
+                .circles li:nth-child(15) {
+                    left: 91%;
+                    width: 15px;
+                    height: 15px;
+                    animation-delay: 10s;
+                    animation-duration: 41s;
+                    background: rgba(255, 50, 255, 0.2);
+                }
+
+                .circles li:nth-child(16) {
+                    left: 5%;
+                    width: 18px;
+                    height: 18px;
+                    animation-delay: 14s;
+                    animation-duration: 29s;
+                    background: rgba(255, 0, 0, 0.2);
+                }
+
+
+
+        @@keyframes animate {
+
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
+        }
+
+
+        @@media screen and (max-width: 767px) {
+            body {
+                overflow-y: visible;
+            }
+        }
+
+
+
+        input[type=range].BSize {
+            -webkit-appearance: none;
+            width: 100%;
+            margin: 11.75px 0;
+        }
+
+            input[type=range].BSize:focus {
+                outline: none;
+            }
+
+            input[type=range].BSize::-webkit-slider-runnable-track {
+                width: 100%;
+                height: 6.5px;
+                cursor: pointer;
+                box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
+                background: #00ffe6;
+                border-radius: 0px;
+                border: 0px solid #000000;
+            }
+
+            input[type=range].BSize::-webkit-slider-thumb {
+                box-shadow: 0px 0px 0px #ffffff, 0px 0px 0px #ffffff;
+                border: 1.9px solid #000000;
+                height: 30px;
+                width: 30px;
+                border-radius: 50px;
+                background: #ffffff;
+                cursor: pointer;
+                -webkit-appearance: none;
+                margin-top: -11.75px;
+            }
+
+            input[type=range].BSize:focus::-webkit-slider-runnable-track {
+                background: #00ffe6;
+            }
+
+            input[type=range].BSize::-moz-range-track {
+                width: 100%;
+                height: 6.5px;
+                cursor: pointer;
+                box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
+                background: #00ffe6;
+                border-radius: 0px;
+                border: 0px solid #000000;
+            }
+
+            input[type=range].BSize::-moz-range-thumb {
+                box-shadow: 0px 0px 0px #ffffff, 0px 0px 0px #ffffff;
+                border: 1.9px solid #000000;
+                height: 30px;
+                width: 30px;
+                border-radius: 50px;
+                background: #ffffff;
+                cursor: pointer;
+            }
+
+            input[type=range].BSize::-ms-track {
+                width: 100%;
+                height: 6.5px;
+                cursor: pointer;
+                background: transparent;
+                border-color: transparent;
+                color: transparent;
+            }
+
+            input[type=range].BSize::-ms-fill-lower {
+                background: #00ffe6;
+                border: 0px solid #000000;
+                border-radius: 0px;
+                box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
+            }
+
+            input[type=range].BSize::-ms-fill-upper {
+                background: #00ffe6;
+                border: 0px solid #000000;
+                border-radius: 0px;
+                box-shadow: 1px 1px 1px rgba(0, 0, 0, 0), 0px 0px 1px rgba(13, 13, 13, 0);
+            }
+
+            input[type=range].BSize::-ms-thumb {
+                box-shadow: 0px 0px 0px #ffffff, 0px 0px 0px #ffffff;
+                border: 1.9px solid #000000;
+                height: 30px;
+                width: 30px;
+                border-radius: 50px;
+                background: #ffffff;
+                cursor: pointer;
+                height: 6.5px;
+            }
+
+            input[type=range].BSize:focus::-ms-fill-lower {
+                background: #00ffe6;
+            }
+
+            input[type=range].BSize:focus::-ms-fill-upper {
+                background: #00ffe6;
+            }
+
+        .gs {
+            padding: 10px 20px 11px !important;
+            font-size: 21px !important;
+            background-color: #8cff80;
+            font-weight: bold;
+            text-shadow: 1px 1px #8cff80;
+            color: #ffffff;
+            border-radius: 100px;
+            -moz-border-radius: 100px;
+            -webkit-border-radius: 100px;
+            border: 1px solid #8cff80;
+            cursor: pointer;
+            box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+            -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+            -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container">
+        <form method="post" asp-controller="Othello" asp-action="AdjustMultiPlayer" style="z-index: 2">
+
+
+            <div class="row">
+
+                <div class="col-md">
+                    <div class="picker">
+                        <div style="margin-left: 5%">Red</div> <input class="sl" type="range" min="0" max="255" step="1" id="red" name="red" value="255">
+                        <div style="margin-left: 5%">Green</div> <input class="sl" type="range" min="0" max="255" step="1" id="green" name="green" value="0">
+                        <div style="margin-left: 5%">Blue</div> <input class="sl" type="range" min="0" max="255" step="1" id="blue" name="blue" value="0">
+
+                        <div id="display" style="margin-left: auto; margin-right: auto;"><b>Player 1</b></div>
+
+                    </div>
+                    <script type="text/javascript">
+                        var input = document.querySelectorAll("input");
+                        for (var i = 0; i < input.length; i++) {
+                            input[i].addEventListener("input",
+                                function () {
+                                    var red = document.getElementById("red").value,
+                                        green = document.getElementById("green").value,
+                                        blue = document.getElementById("blue").value;
+                                    var display = document.getElementById("display");
+                                    display.style.background = "rgb(" + red + ", " + green + ", " + blue + ")";
+                                    if ((red > 200 && blue > 200) || (red > 200 && green > 200) || (green > 200 && blue > 180)) display.style.color = "black";
+                                    else display.style.color = "#ffffff";
+                                });
+                        }
+                    </script>
+                </div>
+
+                <div class="col-md">
+
+                    <div class="picker">
+                        <div style="margin-left: 5%">Red</div> <input class="sl" type="range" min="0" max="255" step="1" id="red1" name="red1" value="0">
+                        <div style="margin-left: 5%">Green</div> <input class="sl" type="range" min="0" max="255" step="1" id="green1" name="green1" value="68">
+                        <div style="margin-left: 5%">Blue</div> <input class="sl" type="range" min="0" max="255" step="1" id="blue1" name="blue1" value="255">
+
+                        <div id="display1" style="margin-left: auto; margin-right: auto;"><b>Player 2</b></div>
+
+                    </div>
+
+                    <script type="text/javascript">
+                        var input = document.querySelectorAll("input");
+                        for (var i = 0; i < input.length; i++) {
+                            input[i].addEventListener("input",
+                                function () {
+                                    var red = document.getElementById("red1").value,
+                                        green = document.getElementById("green1").value,
+                                        blue = document.getElementById("blue1").value;
+                                    var display = document.getElementById("display1");
+                                    display.style.background = "rgb(" + red + ", " + green + ", " + blue + ")";
+                                    if ((red > 200 && blue > 200) || (red > 200 && green > 200) || (green > 200 && blue > 180)) display.style.color = "black";
+                                    else display.style.color = "#ffffff";
+                                });
+                        }
+                    </script>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm">
+                    <div class="name" style="margin: 5%; margin-left: 10%; margin-right: 10%">
+                        <label for="name" style="font-size: 24px;">First player name:</label><br>
+                        <input type="text" name="name" id="name" size="32" title="max. 32 characters" required spellcheck="true" lang="en" autocomplete="on"
+                               placeholder="Hero" style="border-radius: 10px; text-align: center; font-size: 24px; font-family: Courier, monospace; font-weight: bold; box-sizing: border-box;	
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   width: 100%;" /><br>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="name" style="margin: 5%; margin-left: 10%; margin-right: 10%">
+                        <label for="name" style="font-size: 24px;">Second player name:</label><br>
+                        <input type="text" name="name1" id="name1" size="32" title="max. 32 characters" required spellcheck="true" lang="en" autocomplete="on"
+                               placeholder="Hero" style="border-radius: 10px; text-align: center; font-size: 24px; font-family: Courier, monospace; font-weight: bold; box-sizing: border-box;	
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    width: 100%;" /><br>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm">
+                    <div class="fl" style="margin: 10%; margin-left: 10%">
+                        <p style="margin-left: auto; margin-right: auto; font-weight: bold; font-size: 18px">BOARD SIZE &nbsp;: &nbsp;<span id="demo" style="font-size: 24px"></span></p>
+                        <input class="BSize" type="range" min="4" max="24" step="2" id="board" name="boardSize" value="8" style="border-color: rgba(0, 0, 0, 0);">
+                        <script>
+                            var slider = document.getElementById("board");
+                            var output = document.getElementById("demo");
+                            output.innerHTML = slider.value;
+
+                            slider.oninput = function () {
+                                output.innerHTML = this.value;
+                            }
+                        </script>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <input type="submit" value="PLAY" class="gs" style="border: 1px solid #8cff80; color: rgb(60, 60, 60);" />
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </form>
+
+        <ul class="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+
+
+
+    </div>
+</body>
+
+

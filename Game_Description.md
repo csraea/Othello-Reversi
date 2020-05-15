@@ -15,8 +15,8 @@ When the singleplayer mode is on, it is possible to turn on/off the tips (usable
 The comments and rating, unfortunately, are not implemented in the web project due to the lack of time. Hovewer, they are already implemented in the console application.
 
 There is a plenty of things to implement into this game in the future:
-*  *Mixed* behaviour mode (chooses the algorithm of thinking every time randomly)
-*  *Statistics* - it would be great to add the statistics service into the game to trace all data about every game, such as average turn time, average numer of turns er game and so on.
+*  *Mixed* - behaviour mode (chooses the algorithm of thinking every time randomly)
+*  *Statistics* - it would be great to add the statistics service into the game to trace all data about every game, such as average turn time, average numer of turns per game and so on.
 *  *Graphics* - no doubts, that the graphical interface could be better
 *  *Save/Load Game* - a service for storing and loaing unfinished games
 *  *Alpha-Beta prunning* - an improvement of the used Jack's algorithm, where unnecessary branches are ommited in the process of *"thinking"*. It may help to decrease the time of calculating the position of the next move.

@@ -20,6 +20,7 @@ There is a plenty of things to implment further into this game:
 *  *Statistics* - it would be great to add the statistics service into the game to trace all data about every game, such as average turn time, average numer of turns er game and so on.
 *  *Graphics* - no doubts, that the graphical interface could be better
 *  *Save/Load Game* - a service for storing and loaing unfinished games
+*  *Alpha-Beta prunning* - an improvement of the used Jack's algorithm, where unnecessary branches are ommited in the process of *"thinking"*. It may help to decrease the time of calculating the position of the next move.
 
 
 ***ALL OF THESE WOULD HAVE BEEN IMPLEMENTED IF HAD MORE TIME***
